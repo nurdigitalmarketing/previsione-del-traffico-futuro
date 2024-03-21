@@ -65,6 +65,8 @@ Per garantire previsioni accurate, segui i passaggi dettagliati relativi all'ori
    - Rinomina la colonna con le date in `Date` e quella con i volumi di traffico in `Traffic`.
    - Rimuovi le righe e le colonne non pertinenti che non contengono dati di traffico o date.
 
+   Qui puoi trovare un [esempio](https://drive.google.com/file/d/1v4cqG_v8b85t9A7OImsAINKGUCh_eRey/view?usp=sharing) di come dovrebbe apparire.
+
 3. **Caricamento del file:**
    - Carica il file CSV pulito attraverso l'interfaccia di caricamento fornita dallo strumento.
 
