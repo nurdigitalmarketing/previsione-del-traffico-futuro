@@ -29,24 +29,46 @@ st.markdown (
 """
 ## Introduzione
 
-Questo strumento è stato realizzato per fornire previsioni sul traffico futuro a partire dall'export dei dati degli utenti per Google Analytics o dalla ricerca organica di Ahrefs. Utilizzando modelli di previsione avanzati, lo strumento aiuta a capire le tendenze future basandosi sui dati storici.
+Questo strumento è stato sviluppato per fornire previsioni sul traffico futuro basandosi sull'export dei dati degli utenti da Google Analytics o sui dati di ricerca organica da Ahrefs. Attraverso l'utilizzo di modelli di previsione avanzati, facilita la comprensione delle tendenze future basate sui dati storici.
 
 ## Funzionamento
 
-Per ottenere le previsioni più accurate, è importante seguire i passaggi specifici a seconda dell'origine dei dati selezionata. Di seguito sono descritte le procedure per entrambe le fonti.
+Per garantire previsioni accurate, segui i passaggi dettagliati relativi all'origine dei tuoi dati. Ecco come preparare i dati esportati da Google Analytics e Ahrefs.
 
-### Google Analytics
+### Da Google Analytics
 
-1. Esporta i dati degli utenti da Google Analytics, assicurandoti di includere le metriche chiave come date e volumi di traffico.
-2. Pulisci i dati esportati per adattarli al formato richiesto da questo strumento. Per una guida dettagliata su come preparare i tuoi dati, consulta [questo link](https://drive.google.com/file/d/1v4ZpiG8Kijwn1uRm02S1yMRQkWH1G4ov/view?usp=drive_link).
-3. Carica il file CSV pulito utilizzando il pulsante di upload fornito.
+1. **Esportazione dei dati:**
+   - Accedi a Google Analytics.
+   - Vai alla sezione "Rapporti" e seleziona le metriche di traffico che desideri analizzare (es. utenti, sessioni).
+   - Esporta i dati nel formato CSV.
 
-### Ahrefs
+2. **Pulizia dei dati:**
+   - Apri il file CSV con un editor di fogli di calcolo (es. Excel, Google Sheets).
+   - Assicurati che le colonne siano nominate correttamente: la colonna con le date deve essere rinominata in `Date` e la colonna con i volumi di traffico in `Organic Traffic`.
+   - Elimina eventuali righe o colonne non necessarie che non contengono dati relativi al traffico o alle date.
 
-1. Esporta i dati di ricerca organica da Ahrefs, includendo informazioni sulle date e sui volumi di traffico per le parole chiave di interesse.
-2. Assicurati che i dati siano nel formato corretto per l'elaborazione. Una guida completa alla pulizia dei dati per Ahrefs può essere trovata [qui](https://drive.google.com/file/d/1v4cqG_v8b85t9A7OImsAINKGUCh_eRey/view?usp=sharing).
-3. Una volta puliti, carica i tuoi dati attraverso l'interfaccia di caricamento file.
+3. **Selezione del range di date:**
+   - Nello strumento, specifica il range di date che vuoi analizzare inserendo la data di inizio e di fine nel formato `YYYYMMDD`.
+   - Questo aiuterà lo strumento a calibrare correttamente le previsioni sul periodo di interesse.
 
+4. **Caricamento del file:**
+   - Utilizza il pulsante di upload per caricare il tuo file CSV pulito.
+
+### Da Ahrefs
+
+1. **Esportazione dei dati:**
+   - Accedi ad Ahrefs e vai alla sezione di ricerca organica per il tuo sito.
+   - Seleziona il periodo di tempo desiderato e esporta i dati relativi al traffico di ricerca organica.
+
+2. **Pulizia dei dati:**
+   - Apri il file esportato con un software di fogli di calcolo.
+   - Rinomina la colonna con le date in `Date` e quella con i volumi di traffico in `Traffic`.
+   - Rimuovi le righe e le colonne non pertinenti che non contengono dati di traffico o date.
+
+3. **Caricamento del file:**
+   - Carica il file CSV pulito attraverso l'interfaccia di caricamento fornita dallo strumento.
+
+Seguendo questi passaggi, potrai ottenere previsioni precise sul traffico futuro, utili per pianificare le tue strategie SEO e di marketing digitale.
 """
 )
 
