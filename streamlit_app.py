@@ -78,7 +78,7 @@ if uploaded_file is not None:
             incremento = traffic_ultimo_mese - traffic_primo_mese
             percentuale_incremento = (incremento / traffic_primo_mese) * 100
 
-            st.markdown(f"""
+            st.info(f"""
                 **Stima dell'aumento del traffico con Ottimizzazioni con metodo NUR:**
                 - Si stima un aumento di traffico da {formatta_numero(int(traffic_primo_mese))} utenti nel primo mese a {formatta_numero(int(traffic_ultimo_mese))} utenti nell'ultimo mese del periodo di previsione.
                 - **Incremento percentuale:** {percentuale_incremento:.2f}%
