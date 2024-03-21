@@ -38,16 +38,15 @@ Per ottenere le previsioni più accurate, è importante seguire i passaggi speci
 ### Google Analytics
 
 1. Esporta i dati degli utenti da Google Analytics, assicurandoti di includere le metriche chiave come date e volumi di traffico.
-2. Pulisci i dati esportati per adattarli al formato richiesto da questo strumento. Per una guida dettagliata su come preparare i tuoi dati, consulta [questo link](#).
+2. Pulisci i dati esportati per adattarli al formato richiesto da questo strumento. Per una guida dettagliata su come preparare i tuoi dati, consulta [questo link](https://drive.google.com/file/d/1v4ZpiG8Kijwn1uRm02S1yMRQkWH1G4ov/view?usp=drive_link).
 3. Carica il file CSV pulito utilizzando il pulsante di upload fornito.
 
 ### Ahrefs
 
 1. Esporta i dati di ricerca organica da Ahrefs, includendo informazioni sulle date e sui volumi di traffico per le parole chiave di interesse.
-2. Assicurati che i dati siano nel formato corretto per l'elaborazione. Una guida completa alla pulizia dei dati per Ahrefs può essere trovata [qui](#).
+2. Assicurati che i dati siano nel formato corretto per l'elaborazione. Una guida completa alla pulizia dei dati per Ahrefs può essere trovata [qui](https://drive.google.com/file/d/1v4cqG_v8b85t9A7OImsAINKGUCh_eRey/view?usp=sharing).
 3. Una volta puliti, carica i tuoi dati attraverso l'interfaccia di caricamento file.
 
-Seguendo questi passaggi, sarai in grado di ottenere previsioni accurate sul traffico futuro, che ti aiuteranno a pianificare meglio le tue strategie di ottimizzazione SEO e di marketing.
 """
 )
 
