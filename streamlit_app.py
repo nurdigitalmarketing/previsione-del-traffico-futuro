@@ -135,7 +135,7 @@ if uploaded_file is not None:
             percentuale_incremento = (incremento / traffic_primo_mese) * 100
 
             st.info(f"""
-                **Stima dell'aumento del traffico con Ottimizzazioni con metodo NUR:**
+                **Stima dell'aumento del traffico con il metodo NUR®:**
                 - Si stima un aumento di traffico da {formatta_numero(int(traffic_primo_mese))} utenti nel primo mese a {formatta_numero(int(traffic_ultimo_mese))} utenti nell'ultimo mese del periodo di previsione.
                 - **Incremento percentuale:** {percentuale_incremento:.2f}%
             """)
