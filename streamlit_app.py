@@ -25,7 +25,7 @@ print(numero_formattato)  # Output: 1.234.567
 
 st.title('Previsione del Traffico Futuro')
 
-st.markdown (
+st.markdown(
 """
 ## Introduzione
 
@@ -34,45 +34,50 @@ Questo strumento è stato sviluppato per fornire previsioni sul traffico futuro 
 ## Funzionamento
 
 Per garantire previsioni accurate, segui i passaggi dettagliati relativi all'origine dei tuoi dati. Ecco come preparare i dati esportati da Google Analytics e Ahrefs.
+""")
 
-### Da Google Analytics
+with st.expander("Da Google Analytics"):
+    st.markdown(
+    """
+    1. **Esportazione dei dati:**
+       - Accedi a Google Analytics.
+       - Vai alla sezione "Rapporti" e seleziona le metriche di traffico che desideri analizzare (es. utenti, sessioni).
+       - Esporta i dati nel formato CSV.
 
-1. **Esportazione dei dati:**
-   - Accedi a Google Analytics.
-   - Vai alla sezione "Rapporti" e seleziona le metriche di traffico che desideri analizzare (es. utenti, sessioni).
-   - Esporta i dati nel formato CSV.
+    2. **Pulizia dei dati:**
+       - Apri il file CSV con un editor di fogli di calcolo (es. Excel, Google Sheets).
+       - Assicurati che le colonne siano nominate correttamente: la colonna con le date deve essere rinominata in `Date` e la colonna con i volumi di traffico in `Organic Traffic`.
+       - Elimina eventuali righe o colonne non necessarie che non contengono dati relativi al traffico o alle date.
 
-2. **Pulizia dei dati:**
-   - Apri il file CSV con un editor di fogli di calcolo (es. Excel, Google Sheets).
-   - Assicurati che le colonne siano nominate correttamente: la colonna con le date deve essere rinominata in `Date` e la colonna con i volumi di traffico in `Organic Traffic`.
-   - Elimina eventuali righe o colonne non necessarie che non contengono dati relativi al traffico o alle date.
+        _Qui puoi trovare un [esempio](https://drive.google.com/file/d/1v4ZpiG8Kijwn1uRm02S1yMRQkWH1G4ov/view?usp=sharing) di come dovrebbe apparire._
 
-    _Qui puoi trovare un [esempio](https://drive.google.com/file/d/1v4ZpiG8Kijwn1uRm02S1yMRQkWH1G4ov/view?usp=sharing) di come dovrebbe apparire._
+    3. **Selezione del range di date:**
+       - Nello strumento, specifica il range di date che vuoi analizzare inserendo la data di inizio e di fine nel formato `YYYYMMDD`.
+       - Questo aiuterà lo strumento a calibrare correttamente le previsioni sul periodo di interesse.
 
-3. **Selezione del range di date:**
-   - Nello strumento, specifica il range di date che vuoi analizzare inserendo la data di inizio e di fine nel formato `YYYYMMDD`.
-   - Questo aiuterà lo strumento a calibrare correttamente le previsioni sul periodo di interesse.
+    4. **Caricamento del file:**
+       - Utilizza il pulsante di upload per caricare il tuo file CSV pulito.
+    """
+    )
 
-4. **Caricamento del file:**
-   - Utilizza il pulsante di upload per caricare il tuo file CSV pulito.
+with st.expander("Da Ahrefs"):
+    st.markdown(
+    """
+    1. **Esportazione dei dati:**
+       - Accedi ad Ahrefs e vai alla sezione di ricerca organica per il tuo sito.
+       - Seleziona il periodo di tempo desiderato e esporta i dati relativi al traffico di ricerca organica.
 
-### Da Ahrefs
+    2. **Pulizia dei dati:**
+       - Apri il file esportato con un software di fogli di calcolo.
+       - Rinomina la colonna con le date in `Date` e quella con i volumi di traffico in `Traffic`.
+       - Rimuovi le righe e le colonne non pertinenti che non contengono dati di traffico o date.
 
-1. **Esportazione dei dati:**
-   - Accedi ad Ahrefs e vai alla sezione di ricerca organica per il tuo sito.
-   - Seleziona il periodo di tempo desiderato e esporta i dati relativi al traffico di ricerca organica.
+       _Qui puoi trovare un [esempio](https://drive.google.com/file/d/1v4cqG_v8b85t9A7OImsAINKGUCh_eRey/view?usp=sharing) di come dovrebbe apparire._
 
-2. **Pulizia dei dati:**
-   - Apri il file esportato con un software di fogli di calcolo.
-   - Rinomina la colonna con le date in `Date` e quella con i volumi di traffico in `Traffic`.
-   - Rimuovi le righe e le colonne non pertinenti che non contengono dati di traffico o date.
-
-   _Qui puoi trovare un [esempio](https://drive.google.com/file/d/1v4cqG_v8b85t9A7OImsAINKGUCh_eRey/view?usp=sharing) di come dovrebbe apparire._
-
-3. **Caricamento del file:**
-   - Carica il file CSV pulito attraverso l'interfaccia di caricamento fornita dallo strumento.
-"""
-)
+    3. **Caricamento del file:**
+       - Carica il file CSV pulito attraverso l'interfaccia di caricamento fornita dallo strumento.
+    """
+    )
 
 st.markdown ('---')
 
