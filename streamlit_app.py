@@ -6,12 +6,22 @@ from datetime import datetime, timedelta
 import numpy as np
 import locale
 
-# Imposta locale per utilizzare il punto come separatore delle migliaia
-locale.setlocale(locale.LC_ALL, 'en_US.UTF-8')
-
 def formatta_numero(numero):
-    """Formatta il numero con il punto come separatore delle migliaia."""
-    return locale.format_string("%d", numero, grouping=True).replace(',', '.')
+    """Formatta il numero con il punto come separatore delle migliaia.
+    
+    Args:
+        numero (int): Il numero da formattare.
+    
+    Returns:
+        str: Il numero formattato con il punto come separatore delle migliaia.
+    """
+    num_str = f"{numero:,}"  # Formatta il numero con la virgola come separatore delle migliaia
+    return num_str.replace(',', '.')  # Sostituisce la virgola con il punto
+
+# Esempio di utilizzo della funzione
+numero_formattato = formatta_numero(1234567)
+print(numero_formattato)  # Output: 1.234.567
+
 
 st.title('Previsione del Traffico Futuro')
 
@@ -72,7 +82,7 @@ if uploaded_file is not None:
                 **Stima dell'aumento del traffico con Ottimizzazioni con metodo NUR:**
                 - Si stima un aumento di traffico da {formatta_numero(int(traffic_primo_mese))} utenti nel primo mese a {formatta_numero(int(traffic_ultimo_mese))} utenti nell'ultimo mese del periodo di previsione.
                 - **Incremento percentuale:** {percentuale_incremento:.2f}%
-                """)
+            """)
             
             st.write("Anteprima dei dati caricati:")
             st.write(traffic.head())
