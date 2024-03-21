@@ -3,6 +3,7 @@ import pandas as pd
 from prophet import Prophet
 from prophet.plot import plot_plotly, plot_components_plotly
 from datetime import datetime, timedelta
+import numpy as np
 
 st.title('Previsione del Traffico Futuro')
 
@@ -34,34 +35,26 @@ if uploaded_file is not None:
         st.write("Anteprima dei dati caricati:")
         st.write(traffic.head())
 
-        # Controllo che il DataFrame abbia le colonne necessarie per Prophet
         if not {"ds", "y"}.issubset(traffic.columns):
             st.error("Assicurati che il DataFrame abbia le colonne 'ds' per la data e 'y' per la variabile target.")
         else:
-            # Definizione delle festività e degli eventi speciali
             holidays = pd.DataFrame({
               'holiday': 'event',
               'ds': pd.to_datetime(['2015-07-17', '2016-01-08',
-                                   '2016-09-27', '2017-03-08', '2017-07-09', '2018-03-08', '2018-04-17',
-                                   '2018-08-01', '2019-03-12', '2019-06-03', '2019-09-24', '2019-10-25',
-                                   '2019-12-09', '2020-01-13', '2020-05-04', '2020-12-03', '2021-06-02',
-                                   '2021-07-01', '2021-11-17', '2022-05-25', '2023-09-15', '2023-10-05',
-                                   '2023-11-02', '2023-11-08', '2024-03-05']),
+                                    '2016-09-27', '2017-03-08', '2017-07-09', '2018-03-08', '2018-04-17',
+                                    '2018-08-01', '2019-03-12', '2019-06-03', '2019-09-24', '2019-10-25',
+                                    '2019-12-09', '2020-01-13', '2020-05-04', '2020-12-03', '2021-06-02',
+                                    '2021-07-01', '2021-11-17', '2022-05-25', '2023-09-15', '2023-10-05',
+                                    '2023-11-02', '2023-11-08', '2024-03-05']),
               'lower_window': 0,
               'upper_window': 1,
             })
 
-            # Addestramento del modello con le festività
             m = Prophet(holidays=holidays)
             m.fit(traffic)
-
-            # Creazione del dataframe per le future previsioni
             future = m.make_future_dataframe(periods=365)
-
-            # Generazione delle previsioni
             forecast = m.predict(future)
 
-            # Visualizzazione dei risultati
             st.subheader("Previsioni del traffico futuro")
             fig1 = plot_plotly(m, forecast)
             st.plotly_chart(fig1)
@@ -70,9 +63,17 @@ if uploaded_file is not None:
             fig2 = plot_components_plotly(m, forecast)
             st.plotly_chart(fig2)
             
-            # Opzione per scaricare le previsioni come CSV
+            # Calcolo e visualizzazione dell'incremento previsto del traffico
+            inizio_previsioni = forecast['ds'].min()
+            fine_previsioni = forecast['ds'].max()
+            traffic_primo_mese = forecast[forecast['ds'] == inizio_previsioni]['yhat'].sum()
+            traffic_ultimo_mese = forecast[forecast['ds'] == fine_previsioni]['yhat'].sum()
+            incremento = traffic_ultimo_mese - traffic_primo_mese
+            percentuale_incremento = (incremento / traffic_primo_mese) * 100
+            
+            st.markdown(f"Si stima un aumento di traffico da {traffic_primo_mese:.2f} utenti nel primo mese a {traffic_ultimo_mese:.2f} utenti nell'ultimo mese del periodo di previsione, con un incremento del {percentuale_incremento:.2f}%.")
+
             st.download_button(label="Scarica le previsioni in formato CSV",
                                data=forecast.to_csv().encode('utf-8'),
                                file_name='previsioni_traffico_futuro.csv',
                                mime='text/csv')
- 
