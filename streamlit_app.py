@@ -2,27 +2,39 @@ import streamlit as st
 import pandas as pd
 from prophet import Prophet
 from prophet.plot import plot_plotly
+import plotly.express as px
+from datetime import datetime, timedelta
+import io
 
 st.title('Previsione del Traffico Futuro')
 
-# Selettore della fonte dei dati
-data_source = st.selectbox('Seleziona la fonte dei dati:', ['Google Analytics', 'Ahrefs'])
-
+# Caricamento del file CSV
 uploaded_file = st.file_uploader("Carica il file CSV del traffico", type="csv")
-
 if uploaded_file is not None:
-    if data_source == 'Ahrefs':
-        # Caricamento e preparazione dei dati Ahrefs
-        traffic = pd.read_csv(uploaded_file)
-        traffic.rename(columns={'Date': 'ds', 'Organic Traffic': 'y'}, inplace=True)
-    elif data_source == 'Google Analytics':
-        # Caricamento e preparazione dei dati Google Analytics
-        # Saltiamo le righe di intestazione/commento e rinominiamo le colonne
-        traffic = pd.read_csv(uploaded_file, skiprows=7)
-        traffic.rename(columns={'Ennesima settimana': 'ds', 'Utenti': 'y'}, inplace=True)
-        # Qui assumiamo che 'ds' sia un contatore di settimane e lo convertiamo in data
-        # La logica di conversione può variare in base al contesto specifico
-        traffic['ds'] = pd.to_datetime('2023-03-20') + pd.to_timedelta(traffic['ds'].astype(int) * 7, unit='d')
+    # Leggere il contenuto del file come stringa per verificare l'intestazione
+    content = uploaded_file.getvalue().decode("utf-8")
+    
+    # Rilevare il formato del file basandosi sull'intestazione
+    if "Esportazione CSV rapporto" in content:
+        # Analytics format
+        # Estrarre le date di inizio e fine dall'intestazione
+        lines = content.split("\n")
+        start_date_str = lines[5].split(": ")[1]
+        start_date = datetime.strptime(start_date_str, "%Y%m%d")
+        
+        # Convertire il CSV in DataFrame, saltando le righe di intestazione
+        df = pd.read_csv(io.StringIO(content), skiprows=9)
+        
+        # Calcolare la data effettiva per ogni riga basandosi sull'indice settimanale
+        df['Date'] = df['Date'].apply(lambda x: start_date + timedelta(weeks=int(x)))
+    else:
+        # Ahrefs format o altro formato compatibile
+        df = pd.read_csv(io.StringIO(content))
+        # Assumiamo che il file Ahrefs sia già nel formato corretto
+        
+    # Rinominare le colonne per la compatibilità con Prophet
+    df.rename(columns={'Date': 'ds', 'Organic Traffic': 'y'}, inplace=True)
+    
     
     st.write("Anteprima dei dati caricati:")
     st.write(traffic.head())
