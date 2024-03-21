@@ -4,7 +4,6 @@ from prophet import Prophet
 from prophet.plot import plot_plotly, plot_components_plotly
 from datetime import datetime, timedelta
 import numpy as np
-import locale
 
 def formatta_numero(numero):
     """Formatta il numero con il punto come separatore delle migliaia.
