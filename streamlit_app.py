@@ -80,8 +80,8 @@ if uploaded_file is not None:
         if not {"ds", "y"}.issubset(traffic.columns):
             st.error("Assicurati che il DataFrame abbia le colonne 'ds' per la data e 'y' per la variabile target.")
         else:
-            holidays = pd.DataFrame({
-              'holiday': 'event',
+            updates = pd.DataFrame({
+              'holiday': 'Google Update',
               'ds': pd.to_datetime(['2015-07-17', '2016-01-08',
                                     '2016-09-27', '2017-03-08', '2017-07-09', '2018-03-08', '2018-04-17',
                                     '2018-08-01', '2019-03-12', '2019-06-03', '2019-09-24', '2019-10-25',
@@ -92,7 +92,7 @@ if uploaded_file is not None:
               'upper_window': 1,
             })
 
-            m = Prophet(holidays=holidays)
+            m = Prophet(holidays=updates)
             m.fit(traffic)
             future = m.make_future_dataframe(periods=365)
             forecast = m.predict(future)
