@@ -84,16 +84,16 @@ if uploaded_file is not None:
                 - **Incremento percentuale:** {percentuale_incremento:.2f}%
             """)
             
-            st.write("Anteprima dei dati caricati:")
-            st.write(traffic.head())
+            ## st.write("Anteprima dei dati caricati:")
+            ## st.write(traffic.head())
 
             st.subheader("Previsioni del traffico futuro")
             fig1 = plot_plotly(m, forecast)
             st.plotly_chart(fig1)
             
-            st.subheader("Componenti del forecast")
-            fig2 = plot_components_plotly(m, forecast)
-            st.plotly_chart(fig2)
+            ## st.subheader("Componenti del forecast")
+            ## fig2 = plot_components_plotly(m, forecast)
+            ## st.plotly_chart(fig2)
             
             st.download_button(label="Scarica le previsioni in formato CSV",
                                data=forecast.to_csv().encode('utf-8'),
