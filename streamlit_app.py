@@ -62,7 +62,7 @@ if uploaded_file is not None:
 
             st.markdown(f"""
                 **Stima dell'aumento del traffico con Ottimizzazioni con metodo NUR:**
-                - Si stima un aumento di traffico da {int(traffic_primo_mese):,}. utenti nel primo mese a {int(traffic_ultimo_mese):,}. utenti nell'ultimo mese del periodo di previsione.
+                - Si stima un aumento di traffico da {int(traffic_primo_mese):.}. utenti nel primo mese a {int(traffic_ultimo_mese):.}. utenti nell'ultimo mese del periodo di previsione.
                 - **Incremento percentuale:** {percentuale_incremento:.2f}%
                 """, unsafe_allow_html=True)
             
