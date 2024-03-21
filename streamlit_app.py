@@ -12,8 +12,8 @@ origine_dati = st.selectbox("Seleziona l'origine dei dati:", ['Scegli...', 'Goog
 
 # Input per le date di inizio e fine, visibili solo se l'origine dei dati è Google Analytics
 if origine_dati == 'Google Analytics':
-    data_inizio = st.text_input('Inserisci la data di inizio (YYYYMMDD):','20230320')
-    data_fine = st.text_input('Inserisci la data di fine (YYYYMMDD):','20240320')
+    data_inizio = st.text_input('Inserisci la data di inizio (YYYYMMDD):', '20230320')
+    data_fine = st.text_input('Inserisci la data di fine (YYYYMMDD):', '20240320')
 
 # Caricamento del file CSV
 uploaded_file = st.file_uploader("Carica il file CSV del traffico", type="csv")
@@ -62,7 +62,7 @@ if uploaded_file is not None:
 
             st.markdown(f"""
                 **Stima dell'aumento del traffico con Ottimizzazioni con metodo NUR:**
-                - Si stima un aumento di traffico da {int(traffic_primo_mese):.}. utenti nel primo mese a {int(traffic_ultimo_mese):.}. utenti nell'ultimo mese del periodo di previsione.
+                - Si stima un aumento di traffico da {int(traffic_primo_mese):,}. utenti nel primo mese a {int(traffic_ultimo_mese):,}. utenti nell'ultimo mese del periodo di previsione.
                 - **Incremento percentuale:** {percentuale_incremento:.2f}%
                 """, unsafe_allow_html=True)
             
