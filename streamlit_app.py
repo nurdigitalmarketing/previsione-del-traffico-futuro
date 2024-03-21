@@ -25,6 +25,8 @@ print(numero_formattato)  # Output: 1.234.567
 
 st.title('Previsione del Traffico Futuro')
 
+st.markdown ('---')
+
 # Campo di selezione per l'origine dei dati
 origine_dati = st.selectbox("Seleziona l'origine dei dati:", ['Scegli...', 'Google Analytics', 'Ahrefs'])
 
