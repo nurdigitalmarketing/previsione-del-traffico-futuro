@@ -23,7 +23,7 @@ if uploaded_file is not None:
         start_date = datetime.strptime(start_date_str, "%Y%m%d")
         
         # Convertire il CSV in DataFrame, saltando le righe di intestazione
-        df = pd.read_csv(io.StringIO(content), skiprows=9)
+        df = pd.read_csv(io.StringIO(content), skiprows=7)
         
         # Calcolare la data effettiva per ogni riga basandosi sull'indice settimanale
         df['Date'] = df['Date'].apply(lambda x: start_date + timedelta(weeks=int(x)))
