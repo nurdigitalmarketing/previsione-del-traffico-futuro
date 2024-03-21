@@ -46,7 +46,7 @@ if uploaded_file is not None:
         if 'Date' not in traffic.columns:
             st.error("Assicurati che il file CSV abbia la colonna 'Date' nel formato 'YYYY-MM-DD'.")
         else:
-            traffic.rename(columns={'Date': 'ds', 'Traffic': 'y'}, inplace=True)
+            traffic.rename(columns={'Date': 'ds', 'Organic Traffic': 'y'}, inplace=True)
             traffic['ds'] = pd.to_datetime(traffic['ds'])
 
     if origine_dati in ['Google Analytics', 'Ahrefs']:
