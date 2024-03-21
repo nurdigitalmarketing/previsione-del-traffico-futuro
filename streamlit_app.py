@@ -32,9 +32,6 @@ if uploaded_file is not None:
             traffic['ds'] = pd.to_datetime(traffic['ds'])
 
     if origine_dati in ['Google Analytics', 'Ahrefs']:
-        st.write("Anteprima dei dati caricati:")
-        st.write(traffic.head())
-
         if not {"ds", "y"}.issubset(traffic.columns):
             st.error("Assicurati che il DataFrame abbia le colonne 'ds' per la data e 'y' per la variabile target.")
         else:
@@ -54,6 +51,25 @@ if uploaded_file is not None:
             m.fit(traffic)
             future = m.make_future_dataframe(periods=365)
             forecast = m.predict(future)
+            
+            # Calcolo e visualizzazione dell'incremento previsto del traffico
+            inizio_previsioni = forecast['ds'].min()
+            fine_previsioni = forecast['ds'].max()
+            traffic_primo_mese = forecast[forecast['ds'] == inizio_previsioni]['yhat'].sum()
+            traffic_ultimo_mese = forecast[forecast['ds'] == fine_previsioni]['yhat'].sum()
+            incremento = traffic_ultimo_mese - traffic_primo_mese
+            percentuale_incremento = (incremento / traffic_primo_mese) * 100
+
+            st.markdown(f"""
+                **Stima dell'aumento del traffico:**
+                - **Trend (normali attività di ottimizzazione):** Si stima un aumento di traffico da {int(traffic_primo_mese)} utenti nel primo mese a {int(traffic_ultimo_mese)} utenti nell'ultimo mese del periodo di previsione.
+                - **Senza ottimizzazione (yhat_lower):** {int(forecast['yhat_lower'].sum())} utenti totali stimati.
+                - **Con metodo NUR (yhat_upper):** {int(forecast['yhat_upper'].sum())} utenti totali stimati.
+                - **Incremento percentuale:** {percentuale_incremento:.2f}%
+                """)
+
+            st.write("Anteprima dei dati caricati:")
+            st.write(traffic.head())
 
             st.subheader("Previsioni del traffico futuro")
             fig1 = plot_plotly(m, forecast)
@@ -63,16 +79,6 @@ if uploaded_file is not None:
             fig2 = plot_components_plotly(m, forecast)
             st.plotly_chart(fig2)
             
-            # Calcolo e visualizzazione dell'incremento previsto del traffico
-            inizio_previsioni = forecast['ds'].min()
-            fine_previsioni = forecast['ds'].max()
-            traffic_primo_mese = forecast[forecast['ds'] == inizio_previsioni]['yhat'].sum()
-            traffic_ultimo_mese = forecast[forecast['ds'] == fine_previsioni]['yhat'].sum()
-            incremento = traffic_ultimo_mese - traffic_primo_mese
-            percentuale_incremento = (incremento / traffic_primo_mese) * 100
-            
-            st.markdown(f"Si stima un aumento di traffico da {traffic_primo_mese:.2f} utenti nel primo mese a {traffic_ultimo_mese:.2f} utenti nell'ultimo mese del periodo di previsione, con un incremento del {percentuale_incremento:.2f}%.")
-
             st.download_button(label="Scarica le previsioni in formato CSV",
                                data=forecast.to_csv().encode('utf-8'),
                                file_name='previsioni_traffico_futuro.csv',
