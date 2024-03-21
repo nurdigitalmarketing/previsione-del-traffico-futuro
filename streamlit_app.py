@@ -46,8 +46,8 @@ Per garantire previsioni accurate, segui i passaggi dettagliati relativi all'ori
    - Apri il file CSV con un editor di fogli di calcolo (es. Excel, Google Sheets).
    - Assicurati che le colonne siano nominate correttamente: la colonna con le date deve essere rinominata in `Date` e la colonna con i volumi di traffico in `Organic Traffic`.
    - Elimina eventuali righe o colonne non necessarie che non contengono dati relativi al traffico o alle date.
-    <pre></pre>
-    Qui puoi trovare un [esempio](https://drive.google.com/file/d/1v4ZpiG8Kijwn1uRm02S1yMRQkWH1G4ov/view?usp=sharing) di come dovrebbe apparire.
+
+    _Qui puoi trovare un [esempio](https://drive.google.com/file/d/1v4ZpiG8Kijwn1uRm02S1yMRQkWH1G4ov/view?usp=sharing) di come dovrebbe apparire._
 
 3. **Selezione del range di date:**
    - Nello strumento, specifica il range di date che vuoi analizzare inserendo la data di inizio e di fine nel formato `YYYYMMDD`.
@@ -66,8 +66,8 @@ Per garantire previsioni accurate, segui i passaggi dettagliati relativi all'ori
    - Apri il file esportato con un software di fogli di calcolo.
    - Rinomina la colonna con le date in `Date` e quella con i volumi di traffico in `Traffic`.
    - Rimuovi le righe e le colonne non pertinenti che non contengono dati di traffico o date.
-   <pre></pre>
-   Qui puoi trovare un [esempio](https://drive.google.com/file/d/1v4cqG_v8b85t9A7OImsAINKGUCh_eRey/view?usp=sharing) di come dovrebbe apparire.
+
+   _Qui puoi trovare un [esempio](https://drive.google.com/file/d/1v4cqG_v8b85t9A7OImsAINKGUCh_eRey/view?usp=sharing) di come dovrebbe apparire._
 
 3. **Caricamento del file:**
    - Carica il file CSV pulito attraverso l'interfaccia di caricamento fornita dallo strumento.
