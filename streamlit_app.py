@@ -9,6 +9,9 @@ st.title('Previsione del Traffico Futuro')
 uploaded_file = st.file_uploader("Carica il file CSV del traffico", type="csv")
 if uploaded_file is not None:
     traffic = pd.read_csv(uploaded_file)
+
+    traffic.rename(columns={'Date': 'ds', 'Organic Traffic': 'y'}, inplace=True)
+    
     st.write("Anteprima dei dati caricati:")
     st.write(traffic.head())
     
