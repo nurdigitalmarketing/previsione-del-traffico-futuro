@@ -25,6 +25,32 @@ print(numero_formattato)  # Output: 1.234.567
 
 st.title('Previsione del Traffico Futuro')
 
+st.markdown (
+"""
+## Introduzione
+
+Questo strumento è stato realizzato per fornire previsioni sul traffico futuro a partire dall'export dei dati degli utenti per Google Analytics o dalla ricerca organica di Ahrefs. Utilizzando modelli di previsione avanzati, lo strumento aiuta a capire le tendenze future basandosi sui dati storici.
+
+## Funzionamento
+
+Per ottenere le previsioni più accurate, è importante seguire i passaggi specifici a seconda dell'origine dei dati selezionata. Di seguito sono descritte le procedure per entrambe le fonti.
+
+### Google Analytics
+
+1. Esporta i dati degli utenti da Google Analytics, assicurandoti di includere le metriche chiave come date e volumi di traffico.
+2. Pulisci i dati esportati per adattarli al formato richiesto da questo strumento. Per una guida dettagliata su come preparare i tuoi dati, consulta [questo link](#).
+3. Carica il file CSV pulito utilizzando il pulsante di upload fornito.
+
+### Ahrefs
+
+1. Esporta i dati di ricerca organica da Ahrefs, includendo informazioni sulle date e sui volumi di traffico per le parole chiave di interesse.
+2. Assicurati che i dati siano nel formato corretto per l'elaborazione. Una guida completa alla pulizia dei dati per Ahrefs può essere trovata [qui](#).
+3. Una volta puliti, carica i tuoi dati attraverso l'interfaccia di caricamento file.
+
+Seguendo questi passaggi, sarai in grado di ottenere previsioni accurate sul traffico futuro, che ti aiuteranno a pianificare meglio le tue strategie di ottimizzazione SEO e di marketing.
+"""
+)
+
 st.markdown ('---')
 
 # Campo di selezione per l'origine dei dati
