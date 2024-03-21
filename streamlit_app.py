@@ -12,8 +12,8 @@ origine_dati = st.selectbox("Seleziona l'origine dei dati:", ['Scegli...', 'Goog
 
 # Input per le date di inizio e fine, visibili solo se l'origine dei dati è Google Analytics
 if origine_dati == 'Google Analytics':
-    data_inizio = st.text_input('Inserisci la data di inizio (YYYYMMDD):')
-    data_fine = st.text_input('Inserisci la data di fine (YYYYMMDD):')
+    data_inizio = st.text_input('Inserisci la data di inizio (YYYYMMDD):','')
+    data_fine = st.text_input('Inserisci la data di fine (YYYYMMDD):','')
 
 # Caricamento del file CSV
 uploaded_file = st.file_uploader("Carica il file CSV del traffico", type="csv")
