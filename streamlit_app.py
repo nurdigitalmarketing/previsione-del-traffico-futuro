@@ -51,7 +51,7 @@ if uploaded_file is not None:
             m.fit(traffic)
             future = m.make_future_dataframe(periods=365)
             forecast = m.predict(future)
-            
+
             # Calcolo e visualizzazione dell'incremento previsto del traffico
             inizio_previsioni = forecast['ds'].min()
             fine_previsioni = forecast['ds'].max()
@@ -61,11 +61,11 @@ if uploaded_file is not None:
             percentuale_incremento = (incremento / traffic_primo_mese) * 100
 
             st.markdown(f"""
-                **Stima dell'aumento del traffico:**
-                - **Utilizzando il metodo NUR®:** Si stima un aumento di traffico da {int(traffic_primo_mese)} utenti nel primo mese a {int(traffic_ultimo_mese)} utenti nell'ultimo mese del periodo di previsione.
+                **Stima dell'aumento del traffico con Ottimizzazioni con metodo NUR:**
+                - Si stima un aumento di traffico da {int(traffic_primo_mese):,}. utenti nel primo mese a {int(traffic_ultimo_mese):,}. utenti nell'ultimo mese del periodo di previsione.
                 - **Incremento percentuale:** {percentuale_incremento:.2f}%
-                """)
-
+                """, unsafe_allow_html=True)
+            
             st.write("Anteprima dei dati caricati:")
             st.write(traffic.head())
 
