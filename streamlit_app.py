@@ -6,12 +6,21 @@ from datetime import datetime, timedelta
 import numpy as np
 import locale
 
-# Configurazione locale per formattazione numeri
-locale.setlocale(locale.LC_ALL, 'en_US.UTF-8')
-
 def formatta_numero(numero):
-    """Formatta il numero con il punto come separatore delle migliaia."""
-    return f"{numero:n}".replace(',', '.')
+    """Formatta il numero con il punto come separatore delle migliaia.
+    
+    Args:
+        numero (int): Il numero da formattare.
+    
+    Returns:
+        str: Il numero formattato con il punto come separatore delle migliaia.
+    """
+    num_str = f"{numero:,}"  # Formatta il numero con la virgola come separatore delle migliaia
+    return num_str.replace(',', '.')  # Sostituisce la virgola con il punto
+
+# Esempio di utilizzo della funzione
+numero_formattato = formatta_numero(1234567)
+print(numero_formattato)  # Output: 1.234.567
 
 st.title('Previsione del Traffico Futuro')
 
