@@ -39,18 +39,17 @@ if uploaded_file is not None:
             st.error("Assicurati che il DataFrame abbia le colonne 'ds' per la data e 'y' per la variabile target.")
         else:
             # Definizione delle festività e degli eventi speciali
-        # Definizione delle festività e degli eventi speciali
-        updates = pd.DataFrame({
-            'holiday': 'Google Update',
-            'ds': pd.to_datetime(['2015-07-17', '2016-01-08',
-                                  '2016-09-27', '2017-03-08', '2017-07-09', '2018-03-08', '2018-04-17',
-                                  '2018-08-01', '2019-03-12', '2019-06-03', '2019-09-24', '2019-10-25',
-                                  '2019-12-09', '2020-01-13', '2020-05-04', '2020-12-03', '2021-06-02',
-                                  '2021-07-01', '2021-11-17', '2022-05-25', '2023-09-15', '2023-10-05',
-                                  '2023-11-02', '2023-11-08', '2024-03-05']),
-            'lower_window': 0,
-            'upper_window': 14,
-        })
+            holidays = pd.DataFrame({
+              'holiday': 'event',
+              'ds': pd.to_datetime(['2015-07-17', '2016-01-08',
+                                   '2016-09-27', '2017-03-08', '2017-07-09', '2018-03-08', '2018-04-17',
+                                   '2018-08-01', '2019-03-12', '2019-06-03', '2019-09-24', '2019-10-25',
+                                   '2019-12-09', '2020-01-13', '2020-05-04', '2020-12-03', '2021-06-02',
+                                   '2021-07-01', '2021-11-17', '2022-05-25', '2023-09-15', '2023-10-05',
+                                   '2023-11-02', '2023-11-08', '2024-03-05']),
+              'lower_window': 0,
+              'upper_window': 1,
+            })
 
             # Addestramento del modello con le festività
             m = Prophet(holidays=holidays)
@@ -76,3 +75,4 @@ if uploaded_file is not None:
                                data=forecast.to_csv().encode('utf-8'),
                                file_name='previsioni_traffico_futuro.csv',
                                mime='text/csv')
+ 
