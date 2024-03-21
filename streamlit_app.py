@@ -4,6 +4,14 @@ from prophet import Prophet
 from prophet.plot import plot_plotly, plot_components_plotly
 from datetime import datetime, timedelta
 import numpy as np
+import locale
+
+# Imposta locale per utilizzare il punto come separatore delle migliaia
+locale.setlocale(locale.LC_ALL, 'en_US.UTF-8')
+
+def formatta_numero(numero):
+    """Formatta il numero con il punto come separatore delle migliaia."""
+    return locale.format_string("%d", numero, grouping=True).replace(',', '.')
 
 st.title('Previsione del Traffico Futuro')
 
@@ -62,9 +70,9 @@ if uploaded_file is not None:
 
             st.markdown(f"""
                 **Stima dell'aumento del traffico con Ottimizzazioni con metodo NUR:**
-                - Si stima un aumento di traffico da {int(traffic_primo_mese):,}. utenti nel primo mese a {int(traffic_ultimo_mese):,}. utenti nell'ultimo mese del periodo di previsione.
+                - Si stima un aumento di traffico da {formatta_numero(int(traffic_primo_mese))} utenti nel primo mese a {formatta_numero(int(traffic_ultimo_mese))} utenti nell'ultimo mese del periodo di previsione.
                 - **Incremento percentuale:** {percentuale_incremento:.2f}%
-                """, unsafe_allow_html=True)
+                """)
             
             st.write("Anteprima dei dati caricati:")
             st.write(traffic.head())
