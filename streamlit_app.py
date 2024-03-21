@@ -62,9 +62,7 @@ if uploaded_file is not None:
 
             st.markdown(f"""
                 **Stima dell'aumento del traffico:**
-                - **Trend (normali attività di ottimizzazione):** Si stima un aumento di traffico da {int(traffic_primo_mese)} utenti nel primo mese a {int(traffic_ultimo_mese)} utenti nell'ultimo mese del periodo di previsione.
-                - **Senza ottimizzazione (yhat_lower):** {int(forecast['yhat_lower'].sum())} utenti totali stimati.
-                - **Con metodo NUR (yhat_upper):** {int(forecast['yhat_upper'].sum())} utenti totali stimati.
+                - **Utilizzando il metodo NUR®:** Si stima un aumento di traffico da {int(traffic_primo_mese)} utenti nel primo mese a {int(traffic_ultimo_mese)} utenti nell'ultimo mese del periodo di previsione.
                 - **Incremento percentuale:** {percentuale_incremento:.2f}%
                 """)
 
