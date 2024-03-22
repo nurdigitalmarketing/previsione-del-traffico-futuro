@@ -81,7 +81,7 @@ with st.expander("Da Ahrefs"):
 st.markdown ('---')
 
 # Campo di selezione per l'origine dei dati
-origine_dati = st.selectbox("Seleziona l'origine dei dati:", ['Scegli...', 'Google Analytics', 'Ahrefs/Semrush'])
+origine_dati = st.selectbox("Seleziona l'origine dei dati:", ['Scegli...', 'Google Analytics', 'Ahrefs', 'Semrush'])
 
 # Input per le date di inizio e fine, visibili solo se l'origine dei dati è Google Analytics
 if origine_dati == 'Google Analytics':
@@ -103,8 +103,18 @@ if uploaded_file is not None:
         else:
             traffic.rename(columns={'Date': 'ds', 'Organic Traffic': 'y'}, inplace=True)
             traffic['ds'] = pd.to_datetime(traffic['ds'])
+    elif origine_dati == 'Semrush':  # Gestione del caso Semrush
+        traffic = pd.read_csv(uploaded_file)
+        # Assicurati che il file CSV abbia una colonna 'Date' nel formato 'YYYY-MM'
+        if 'Date' not in traffic.columns or 'Organic Traffic' not in traffic.columns:
+            st.error("Assicurati che il file CSV abbia le colonne 'Date' nel formato 'YYYY-MM' e 'Organic Traffic'.")
+        else:
+            # Conversione del formato della data da 'YYYY-MM' a datetime, aggiungendo '-01' per completare la data
+            traffic['ds'] = pd.to_datetime(traffic['Date'] + '-01')
+            traffic.rename(columns={'Organic Traffic': 'y'}, inplace=True)
 
-    if origine_dati in ['Google Analytics', 'Ahrefs']:
+    # Verifica delle colonne per tutti i casi
+    if origine_dati in ['Google Analytics', 'Ahrefs', 'Semrush']:
         if not {"ds", "y"}.issubset(traffic.columns):
             st.error("Assicurati che il DataFrame abbia le colonne 'ds' per la data e 'y' per la variabile target.")
         else:
