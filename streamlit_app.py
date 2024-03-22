@@ -44,7 +44,7 @@ with st.expander("Da Google Analytics"):
        - Esporta i dati nel formato CSV.
 
     2. **Pulizia dei dati:**
-       - Apri il file CSV con un editor di fogli di calcolo (es. Excel, Google Sheets).
+       - Apri il file CSV su Google Fogli.
        - Assicurati che le colonne siano nominate correttamente: la colonna con le date deve essere rinominata in `Date` e la colonna con i volumi di traffico in `Organic Traffic`.
        - Elimina eventuali righe o colonne non necessarie che non contengono dati relativi al traffico o alle date.
 
@@ -67,7 +67,7 @@ with st.expander("Da Ahrefs"):
        - Seleziona il periodo di tempo desiderato e esporta i dati relativi al traffico di ricerca organica.
 
     2. **Pulizia dei dati:**
-       - Apri il file esportato con un software di fogli di calcolo.
+       - Apri il file esportato con Google Fogli.
        - Rinomina la colonna con le date in `Date` e quella con i volumi di traffico in `Organic Traffic`.
        - Rimuovi le righe e le colonne non pertinenti che non contengono dati di traffico o date.
 
@@ -86,11 +86,15 @@ with st.expander("Da Semrush"):
        - Seleziona il periodo di tempo desiderato (i.e. 2A) e esporta i dati relativi al traffico di ricerca organica.
 
     2. **Pulizia dei dati:**
-       - Apri il file esportato con un software di fogli di calcolo.
-       - Rinomina la colonna con le date in `Date` e quella con i volumi di traffico in `Organic Traffic`.
-       - Rimuovi le righe e le colonne non pertinenti che non contengono dati di traffico o date.
+       - Apri il file esportato con Google Fogli.
+       - Rimuovi le colonne A, B, C e D e le colonne dalla 3 alla 9 comprese.
+       - Rinomina la colonna `Summary` in `Date` e la cella sotto `Summary` in `Organic Traffic`.
+       - Esporta il file in CSV ed importalo nello strumento [CSV rows and columns converter](https://onlinecsvtools.com/convert-csv-rows-to-columns) cliccando su _import from file_ sotto _input csv_.
+       - A questo punto, sotto _output csv_, copia il risultato ottenuto.
+       - Apri un nuovo foglio su Google Fogli e incolla il risultato ottenuto. Vai su `Dati` e clicca su `Suddividi il testo in colonne`.
+       - Esporta il file in formato CSV.
 
-       _Qui puoi trovare un [esempio](https://drive.google.com/file/d/1v4cqG_v8b85t9A7OImsAINKGUCh_eRey/view?usp=sharing) di come dovrebbe apparire._
+       _Qui puoi trovare un [esempio](https://drive.google.com/file/d/1ZkfuqbHcxQhm5zX8L_nKf0OPWAYTg3Hr/view?usp=sharing) di come dovrebbe apparire._
 
     3. **Caricamento del file:**
        - Carica il file CSV pulito attraverso l'interfaccia di caricamento fornita dallo strumento.
