@@ -68,7 +68,26 @@ with st.expander("Da Ahrefs"):
 
     2. **Pulizia dei dati:**
        - Apri il file esportato con un software di fogli di calcolo.
-       - Rinomina la colonna con le date in `Date` e quella con i volumi di traffico in `Traffic`.
+       - Rinomina la colonna con le date in `Date` e quella con i volumi di traffico in `Organic Traffic`.
+       - Rimuovi le righe e le colonne non pertinenti che non contengono dati di traffico o date.
+
+       _Qui puoi trovare un [esempio](https://drive.google.com/file/d/1v4cqG_v8b85t9A7OImsAINKGUCh_eRey/view?usp=sharing) di come dovrebbe apparire._
+
+    3. **Caricamento del file:**
+       - Carica il file CSV pulito attraverso l'interfaccia di caricamento fornita dallo strumento.
+    """
+    )
+
+with st.expander("Da Semrush"):
+    st.markdown(
+    """
+    1. **Esportazione dei dati:**
+       - Accedi a Semrush e vai alla sezione di _panoramica dominio_ per il tuo sito.
+       - Seleziona il periodo di tempo desiderato (i.e. 2A) e esporta i dati relativi al traffico di ricerca organica.
+
+    2. **Pulizia dei dati:**
+       - Apri il file esportato con un software di fogli di calcolo.
+       - Rinomina la colonna con le date in `Date` e quella con i volumi di traffico in `Organic Traffic`.
        - Rimuovi le righe e le colonne non pertinenti che non contengono dati di traffico o date.
 
        _Qui puoi trovare un [esempio](https://drive.google.com/file/d/1v4cqG_v8b85t9A7OImsAINKGUCh_eRey/view?usp=sharing) di come dovrebbe apparire._
