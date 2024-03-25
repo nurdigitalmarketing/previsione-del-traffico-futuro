@@ -115,14 +115,15 @@ if uploaded_file is not None:
             future = m.make_future_dataframe(periods=lunghezza_periodo_input)
             forecast = m.predict(future)
 
-            # Calcolo dell'incremento del traffico
-            periodo_input = forecast[(forecast['ds'] >= traffic['ds'].min()) & (forecast['ds'] <= traffic['ds'].max())]
-            periodo_previsione = forecast[(forecast['ds'] > traffic['ds'].max()) & (forecast['ds'] <= traffic['ds'].max() + pd.Timedelta(days=lunghezza_periodo_input))]
-
-            traffico_totale_input = periodo_input['yhat'].sum()
-            traffico_totale_previsione = periodo_previsione['yhat'].sum()
-            incremento = traffico_totale_previsione - traffico_totale_input
-            percentuale_incremento = (incremento / traffico_totale_input) * 100
+            # Calcolo dell'incremento del traffico per il periodo di input
+            traffic_input = forecast[(forecast['ds'] >= data_inizio_input) & (forecast['ds'] <= data_fine_input)]
+            incremento_input = traffic_input['yhat'].iloc[-1] - traffic_input['yhat'].iloc[0]
+            percentuale_incremento_input = (incremento_input / traffic_input['yhat'].iloc[0]) * 100
+            
+            # Calcolo dell'incremento del traffico per il periodo di previsione
+            traffic_previsione = forecast[(forecast['ds'] >= data_inizio_previsione) & (forecast['ds'] <= data_fine_previsione)]
+            incremento_previsione = traffic_previsione['yhat'].iloc[-1] - traffic_previsione['yhat'].iloc[0]
+            percentuale_incremento_previsione = (incremento_previsione / traffic_previsione['yhat'].iloc[0]) * 100
 
             st.info(f"""
                 **Stima dell'aumento del traffico con il metodo NUR®:**
