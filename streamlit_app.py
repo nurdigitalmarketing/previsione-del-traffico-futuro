@@ -28,11 +28,11 @@ st.markdown(
 """
 ## Introduzione
 
-Questo strumento è stato sviluppato per fornire previsioni sul traffico futuro basandosi sull'export dei dati degli utenti da Google Analytics o sui dati di ricerca organica da Ahrefs/Semrush. Attraverso l'utilizzo di modelli di previsione avanzati, facilita la comprensione delle tendenze future basate sui dati storici.
+Questo strumento è stato sviluppato per fornire previsioni sul traffico futuro basandosi sull'export dei dati degli utenti da _Google Analytics_ o sui dati di ricerca organica da _Ahrefs_ o _Semrush_. Attraverso l'utilizzo di modelli di previsione avanzati, facilita la comprensione delle tendenze future basate sui dati storici.
 
 ## Funzionamento
 
-Per garantire previsioni accurate, segui i passaggi dettagliati relativi all'origine dei tuoi dati. Ecco come preparare i dati esportati da Google Analytics e Ahrefs/Semrush.
+Per garantire previsioni accurate, segui i passaggi dettagliati relativi all'origine dei tuoi dati. Ecco come preparare i dati esportati da Google Analytics, Ahrefs o Semrush.
 """)
 
 with st.expander("Da Google Analytics"):
@@ -44,9 +44,9 @@ with st.expander("Da Google Analytics"):
        - Esporta i dati nel formato CSV.
 
     2. **Pulizia dei dati:**
-       - Apri il file CSV con un editor di fogli di calcolo (es. Excel, Google Sheets).
-       - Assicurati che le colonne siano nominate correttamente: la colonna con le date deve essere rinominata in `Date` e la colonna con i volumi di traffico in `Organic Traffic`.
-       - Elimina eventuali righe o colonne non necessarie che non contengono dati relativi al traffico o alle date.
+       - Apri il file CSV su Google Fogli.
+       - Elimina tutte le righe dalla 1 alla 8 e dalla riga dopo l'ultima "Ennesima settimana" del primo blocco di data e utenti.
+       - Fatto ciò, assicurati che le colonne siano nominate correttamente: la colonna con le date deve essere rinominata in `Date` e la colonna con i volumi di traffico in `Organic Traffic`.
 
         _Qui puoi trovare un [esempio](https://drive.google.com/file/d/1v4ZpiG8Kijwn1uRm02S1yMRQkWH1G4ov/view?usp=sharing) di come dovrebbe apparire._
 
@@ -67,8 +67,8 @@ with st.expander("Da Ahrefs"):
        - Seleziona il periodo di tempo desiderato e esporta i dati relativi al traffico di ricerca organica.
 
     2. **Pulizia dei dati:**
-       - Apri il file esportato con un software di fogli di calcolo.
-       - Rinomina la colonna con le date in `Date` e quella con i volumi di traffico in `Traffic`.
+       - Apri il file esportato con Google Fogli.
+       - Rinomina la colonna con le date in `Date` e quella con i volumi di traffico in `Organic Traffic`.
        - Rimuovi le righe e le colonne non pertinenti che non contengono dati di traffico o date.
 
        _Qui puoi trovare un [esempio](https://drive.google.com/file/d/1v4cqG_v8b85t9A7OImsAINKGUCh_eRey/view?usp=sharing) di come dovrebbe apparire._
@@ -78,10 +78,33 @@ with st.expander("Da Ahrefs"):
     """
     )
 
+with st.expander("Da Semrush"):
+    st.markdown(
+    """
+    1. **Esportazione dei dati:**
+       - Accedi a Semrush e vai alla sezione di _panoramica dominio_ per il tuo sito.
+       - Seleziona il periodo di tempo desiderato (i.e. 2A) e esporta i dati relativi al traffico di ricerca organica.
+
+    2. **Pulizia dei dati:**
+       - Apri il file esportato con Google Fogli.
+       - Rimuovi le colonne A, B, C e D e le colonne dalla 3 alla 9 comprese.
+       - Rinomina la colonna `Summary` in `Date` e la cella sotto `Summary` in `Organic Traffic`.
+       - Esporta il file in CSV ed importalo nello strumento [CSV rows and columns converter](https://onlinecsvtools.com/convert-csv-rows-to-columns) cliccando su _import from file_ sotto _input csv_.
+       - A questo punto, sotto _output csv_, copia il risultato ottenuto.
+       - Apri un nuovo foglio su Google Fogli e incolla il risultato ottenuto. Vai su `Dati` e clicca su `Suddividi il testo in colonne`.
+       - Esporta il file in formato CSV.
+
+       _Qui puoi trovare un [esempio](https://drive.google.com/file/d/1ZkfuqbHcxQhm5zX8L_nKf0OPWAYTg3Hr/view?usp=sharing) di come dovrebbe apparire._
+
+    3. **Caricamento del file:**
+       - Carica il file CSV pulito attraverso l'interfaccia di caricamento fornita dallo strumento.
+    """
+    )
+
 st.markdown ('---')
 
 # Campo di selezione per l'origine dei dati
-origine_dati = st.selectbox("Seleziona l'origine dei dati:", ['Scegli...', 'Google Analytics', 'Ahrefs/Semrush'])
+origine_dati = st.selectbox("Seleziona l'origine dei dati:", ['Scegli...', 'Google Analytics', 'Ahrefs', 'Semrush'])
 
 # Input per le date di inizio e fine, visibili solo se l'origine dei dati è Google Analytics
 if origine_dati == 'Google Analytics':
@@ -103,8 +126,18 @@ if uploaded_file is not None:
         else:
             traffic.rename(columns={'Date': 'ds', 'Organic Traffic': 'y'}, inplace=True)
             traffic['ds'] = pd.to_datetime(traffic['ds'])
+    elif origine_dati == 'Semrush':  # Gestione del caso Semrush
+        traffic = pd.read_csv(uploaded_file)
+        # Assicurati che il file CSV abbia una colonna 'Date' nel formato 'YYYY-MM'
+        if 'Date' not in traffic.columns or 'Organic Traffic' not in traffic.columns:
+            st.error("Assicurati che il file CSV abbia le colonne 'Date' nel formato 'YYYY-MM' e 'Organic Traffic'.")
+        else:
+            # Conversione del formato della data da 'YYYY-MM' a datetime, aggiungendo '-01' per completare la data
+            traffic['ds'] = pd.to_datetime(traffic['Date'] + '-01')
+            traffic.rename(columns={'Organic Traffic': 'y'}, inplace=True)
 
-    if origine_dati in ['Google Analytics', 'Ahrefs']:
+    # Verifica delle colonne per tutti i casi
+    if origine_dati in ['Google Analytics', 'Ahrefs', 'Semrush']:
         if not {"ds", "y"}.issubset(traffic.columns):
             st.error("Assicurati che il DataFrame abbia le colonne 'ds' per la data e 'y' per la variabile target.")
         else:
