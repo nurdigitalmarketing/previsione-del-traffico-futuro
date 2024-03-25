@@ -104,7 +104,7 @@ with st.expander("Da Semrush"):
 st.markdown ('---')
 
 # Campo di selezione per l'origine dei dati
-origine_dati = st.selectbox("1. Seleziona l'origine dei dati:", ['Scegli...', 'Google Analytics', 'Ahrefs', 'Semrush'])
+origine_dati = st.selectbox("1- Seleziona l'origine dei dati:", ['Scegli...', 'Google Analytics', 'Ahrefs', 'Semrush'])
 
 # Input per le date di inizio e fine, visibili solo se l'origine dei dati è Google Analytics
 if origine_dati == 'Google Analytics':
