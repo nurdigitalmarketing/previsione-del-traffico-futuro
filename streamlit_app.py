@@ -45,8 +45,8 @@ with st.expander("Da Google Analytics"):
 
     2. **Pulizia dei dati:**
        - Apri il file CSV su Google Fogli.
-       - Assicurati che le colonne siano nominate correttamente: la colonna con le date deve essere rinominata in `Date` e la colonna con i volumi di traffico in `Organic Traffic`.
-       - Elimina eventuali righe o colonne non necessarie che non contengono dati relativi al traffico o alle date.
+       - Elimina tutte le righe dalla 1 alla 8 e dalla riga dopo l'ultima "Ennesima settimana" del primo blocco di data e utenti.
+       - Fatto ciò, assicurati che le colonne siano nominate correttamente: la colonna con le date deve essere rinominata in `Date` e la colonna con i volumi di traffico in `Organic Traffic`.
 
         _Qui puoi trovare un [esempio](https://drive.google.com/file/d/1v4ZpiG8Kijwn1uRm02S1yMRQkWH1G4ov/view?usp=sharing) di come dovrebbe apparire._
 
