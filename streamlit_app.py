@@ -1,7 +1,8 @@
 import streamlit as st
 import pandas as pd
 from prophet import Prophet
-from datetime import datetime
+from prophet.plot import plot_plotly, plot_components_plotly
+from datetime import datetime, timedelta
 import numpy as np
 
 def formatta_numero(numero):
