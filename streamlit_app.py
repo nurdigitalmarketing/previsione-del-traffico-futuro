@@ -104,12 +104,12 @@ with st.expander("Da Semrush"):
 st.markdown ('---')
 
 # Campo di selezione per l'origine dei dati
-origine_dati = st.selectbox("Seleziona l'origine dei dati:", ['Scegli...', 'Google Analytics', 'Ahrefs', 'Semrush'])
+origine_dati = st.selectbox("1. Seleziona l'origine dei dati:", ['Scegli...', 'Google Analytics', 'Ahrefs', 'Semrush'])
 
 # Input per le date di inizio e fine, visibili solo se l'origine dei dati è Google Analytics
 if origine_dati == 'Google Analytics':
-    data_inizio = st.text_input('Inserisci la data di inizio (YYYYMMDD):')
-    data_fine = st.text_input('Inserisci la data di fine (YYYYMMDD):')
+    data_inizio = st.text_input('Inserisci la data di inizio e premi "Invio" (YYYYMMDD):')
+    data_fine = st.text_input('Inserisci la data di fine e premi "Invio" (YYYYMMDD):')
 
 # Caricamento del file CSV
 uploaded_file = st.file_uploader("Carica il file CSV del traffico", type="csv")
