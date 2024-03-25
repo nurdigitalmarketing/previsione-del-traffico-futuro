@@ -109,25 +109,20 @@ if uploaded_file is not None:
             # Esecuzione delle previsioni
             forecast = m.predict(future)
             
-            # Identificazione dei periodi di input e previsione nel DataFrame delle previsioni
-            # Il periodo di input è rappresentato dai dati esistenti in `traffic`
-            # Il periodo di previsione inizia il giorno dopo l'ultimo dato di input e si estende per la stessa lunghezza del periodo di input
-            
-            # Si noti che la conversione in giorni aggiunge un giorno in più, quindi si sottrae 1 per corrispondere esattamente al numero di giorni di previsione
-            data_fine_input = traffic['ds'].max()
-            data_inizio_previsione = data_fine_input + pd.Timedelta(days=1)
-            data_fine_previsione = data_inizio_previsione + pd.Timedelta(days=lunghezza_periodo_input - 1)
-            
-            # Filtraggio del DataFrame delle previsioni per ottenere i totali del traffico per il periodo di input e previsione
-            periodo_input = forecast[(forecast['ds'] >= traffic['ds'].min()) & (forecast['ds'] <= data_fine_input)]
-            periodo_previsione = forecast[(forecast['ds'] >= data_inizio_previsione) & (forecast['ds'] <= data_fine_previsione)]
-            
+            # Calcolo della lunghezza del periodo di input
+            lunghezza_periodo_input = (traffic['ds'].max() - traffic['ds'].min()).days + 1
+            future = m.make_future_dataframe(periods=lunghezza_periodo_input)
+            forecast = m.predict(future)
+
+            # Calcolo dell'incremento del traffico
+            periodo_input = forecast[(forecast['ds'] >= traffic['ds'].min()) & (forecast['ds'] <= traffic['ds'].max())]
+            periodo_previsione = forecast[(forecast['ds'] > traffic['ds'].max()) & (forecast['ds'] <= traffic['ds'].max() + pd.Timedelta(days=lunghezza_periodo_input))]
+
             traffico_totale_input = periodo_input['yhat'].sum()
             traffico_totale_previsione = periodo_previsione['yhat'].sum()
-            
             incremento = traffico_totale_previsione - traffico_totale_input
             percentuale_incremento = (incremento / traffico_totale_input) * 100
-            
+
             st.info(f"""
                 **Stima dell'aumento del traffico con il metodo NUR®:**
                 - Incremento previsto: {formatta_numero(int(incremento))} utenti
