@@ -161,25 +161,31 @@ if uploaded_file is not None:
             
             # Calcolo e visualizzazione dell'incremento previsto del traffico
             fine_previsioni = forecast['ds'].max()
-            inizio_previsioni = fine_previsioni - DateOffset(months=12)
+            inizio_previsioni = fine_previsioni - DateOffset(days=365)
             
-            # Filtraggio per ottenere il traffico del "primo mese" 12 mesi prima della fine delle previsioni
-            traffic_primo_mese = forecast[forecast['ds'] >= inizio_previsioni]['yhat'].iloc[0]
+            # Assicurarsi che traffic_primo_mese sia esattamente 365 giorni prima di traffic_ultimo_mese
+            # Filtraggio per ottenere il traffico del "primo mese" esattamente 365 giorni prima della fine delle previsioni
+            traffic_primo_mese_data = forecast[forecast['ds'] == inizio_previsioni]
             
-            # Filtraggio per ottenere il traffico dell'ultimo mese (fine delle previsioni)
-            traffic_ultimo_mese = forecast[forecast['ds'] == fine_previsioni]['yhat'].sum()
+            # Se esiste una corrispondenza esatta per la data
+            if not traffic_primo_mese_data.empty:
+                traffic_primo_mese = traffic_primo_mese_data['yhat'].sum()
+            else:
+                print("Nessuna corrispondenza esatta per la data inizio previsioni, controllare i dati.")
+                traffic_primo_mese = None
             
-            incremento = traffic_ultimo_mese - traffic_primo_mese
-            percentuale_incremento = (incremento / traffic_primo_mese) * 100
+            # Continuare solo se è stato trovato un valore per traffic_primo_mese
+            if traffic_primo_mese is not None:
+                # Filtraggio per ottenere il traffico dell'ultimo mese (fine delle previsioni)
+                traffic_ultimo_mese = forecast[forecast['ds'] == fine_previsioni]['yhat'].sum()
             
-            print(f"Incremento: {incremento}, Percentuale di incremento: {percentuale_incremento}%")
+                incremento = traffic_ultimo_mese - traffic_primo_mese
+                percentuale_incremento = (incremento / traffic_primo_mese) * 100
+            
+                print(f"Incremento: {incremento}, Percentuale di incremento: {percentuale_incremento}%")
+            else:
+                print("Impossibile calcolare l'incremento senza una data di inizio valida.")
 
-
-            st.info(f"""
-                **Stima dell'aumento del traffico con il metodo NUR®:**
-                - Si stima un aumento di traffico da {formatta_numero(int(traffic_primo_mese))} utenti nel primo mese a {formatta_numero(int(traffic_ultimo_mese))} utenti nell'ultimo mese del periodo di previsione.
-                - **Incremento percentuale:** {percentuale_incremento:.2f}%
-            """)
             
             ## st.write("Anteprima dei dati caricati:")
             ## st.write(traffic.head())
