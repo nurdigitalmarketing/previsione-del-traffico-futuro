@@ -158,34 +158,41 @@ if uploaded_file is not None:
             m.fit(traffic)
             future = m.make_future_dataframe(periods=365)
             forecast = m.predict(future)
+
             
+            # Funzione per formattare le date in modo leggibile
+            def formatta_data(data):
+                return data.strftime('%d %B %Y')
             
-            # Determinazione dell'ultima data di previsione
+            # Calcolo delle date
             fine_previsioni = forecast['ds'].max()
-            
-            # Calcolo della data di inizio previsioni, esattamente 365 giorni prima
             inizio_previsioni = fine_previsioni - DateOffset(days=365)
             
             # Tentativo di trovare il valore della tendenza per la data di inizio
             traffic_primo_mese_data = forecast[forecast['ds'] == inizio_previsioni]
             
             if not traffic_primo_mese_data.empty:
-                # Prendendo il valore della tendenza alla data di inizio previsioni
                 traffic_primo_mese_trend = traffic_primo_mese_data['trend'].iloc[0]
-                # Assumendo di voler ancora usare il valore yhat come "traffic_ultimo_mese"
                 traffic_ultimo_mese = forecast[forecast['ds'] == fine_previsioni]['yhat'].sum()
             
                 incremento = traffic_ultimo_mese - traffic_primo_mese_trend
                 percentuale_incremento = (incremento / traffic_primo_mese_trend) * 100
             
-                # Visualizzazione dei risultati con Streamlit
-                st.info(f"""
-                    **Stima dell'aumento del traffico con il metodo NUR®:**
-                    - Si stima un aumento di traffico da {formatta_numero(int(traffic_primo_mese_trend))} (trend iniziale) a {formatta_numero(int(traffic_ultimo_mese))} utenti (previsione finale) nell'ultimo mese del periodo di previsione.
-                    - **Incremento percentuale:** {percentuale_incremento:.2f}%
-                """)
+                # Costruzione del messaggio da visualizzare
+                messaggio = f"""
+                    **Stima della variazione del traffico con il metodo NUR®:**
+                    - Si stima una variazione di traffico dal {formatta_data(inizio_previsioni)} al {formatta_data(fine_previsioni)}.
+                    - **{'Incremento' if percentuale_incremento > 0 else 'Decremento'} percentuale:** {abs(percentuale_incremento):.2f}%
+                """
+            
+                # Visualizzazione del messaggio appropriato in base all'incremento o decremento
+                if percentuale_incremento > 0:
+                    st.success(messaggio)
+                else:
+                    st.error(messaggio)
             else:
                 st.error("Nessuna corrispondenza esatta per la data inizio previsioni nella colonna 'trend', controllare i dati.")
+
 
 
             
