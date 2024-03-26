@@ -160,9 +160,19 @@ if uploaded_file is not None:
             forecast = m.predict(future)
 
             
-            # Funzione per formattare le date in modo leggibile
+            # Mappatura dei mesi in italiano
+            mesi_italiani = {
+                1: 'gennaio', 2: 'febbraio', 3: 'marzo', 4: 'aprile', 5: 'maggio', 6: 'giugno',
+                7: 'luglio', 8: 'agosto', 9: 'settembre', 10: 'ottobre', 11: 'novembre', 12: 'dicembre'
+            }
+            
+            # Funzione per formattare le date in modo leggibile in italiano
             def formatta_data(data):
-                return data.strftime('%d %B %Y')
+                giorno = data.day
+                mese = mesi_italiani[data.month]
+                anno = data.year
+                return f"{giorno} {mese} {anno}"
+
             
             # Calcolo delle date
             fine_ultimo_periodo = forecast['ds'].max()
