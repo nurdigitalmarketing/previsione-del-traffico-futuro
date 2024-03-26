@@ -159,7 +159,7 @@ if uploaded_file is not None:
             future = m.make_future_dataframe(periods=365)
             forecast = m.predict(future)
 
-            
+
             # Mappatura dei mesi in italiano
             mesi_italiani = {
                 1: 'gennaio', 2: 'febbraio', 3: 'marzo', 4: 'aprile', 5: 'maggio', 6: 'giugno',
@@ -172,6 +172,10 @@ if uploaded_file is not None:
                 mese = mesi_italiani[data.month]
                 anno = data.year
                 return f"{giorno} {mese} {anno}"
+            
+            # Funzione per formattare i numeri con i separatori delle migliaia
+            def formatta_numero(numero):
+                return f"{numero:,}".replace(",", ".")
             
             # Calcolo delle date
             fine_ultimo_periodo = forecast['ds'].max()
@@ -188,8 +192,8 @@ if uploaded_file is not None:
             # Costruzione del messaggio da visualizzare
             messaggio = f"""
                 **Confronto del traffico tra i periodi:**
-                - Dal {formatta_data(inizio_periodo_precedente + DateOffset(days=1))} al {formatta_data(inizio_ultimo_periodo)}: {int(somma_periodo_precedente)} utenti
-                - Dal {formatta_data(inizio_ultimo_periodo + DateOffset(days=1))} al {formatta_data(fine_ultimo_periodo)}: {int(somma_ultimo_periodo)} utenti
+                - Dal {formatta_data(inizio_periodo_precedente + DateOffset(days=1))} al {formatta_data(inizio_ultimo_periodo)}: {formatta_numero(int(somma_periodo_precedente))} utenti
+                - Dal {formatta_data(inizio_ultimo_periodo + DateOffset(days=1))} al {formatta_data(fine_ultimo_periodo)}: {formatta_numero(int(somma_ultimo_periodo))} utenti
                 - **{'Incremento' if percentuale_incremento > 0 else 'Decremento'} percentuale:** {abs(percentuale_incremento):.2f}%
             """
             
@@ -199,30 +203,6 @@ if uploaded_file is not None:
             else:
                 st.error(messaggio)
 
-
-                # Calcolo delle date
-                fine_ultimo_periodo = forecast['ds'].max()
-                inizio_ultimo_periodo = fine_ultimo_periodo - DateOffset(days=365)
-                inizio_periodo_precedente = inizio_ultimo_periodo - DateOffset(days=365)
-                
-                # Filtraggio del DataFrame per i due periodi e calcolo delle somme
-                somma_ultimo_periodo = forecast[(forecast['ds'] > inizio_ultimo_periodo) & (forecast['ds'] <= fine_ultimo_periodo)]['yhat'].sum()
-                somma_periodo_precedente = forecast[(forecast['ds'] > inizio_periodo_precedente) & (forecast['ds'] <= inizio_ultimo_periodo)]['yhat'].sum()
-                
-                incremento = somma_ultimo_periodo - somma_periodo_precedente
-                percentuale_incremento = (incremento / somma_periodo_precedente) * 100
-                
-                # Costruzione del messaggio da visualizzare e scelta del metodo di visualizzazione in base all'incremento o decremento
-                messaggio = f"""
-                    **Confronto della variazione del traffico tra i periodi con il metodo NUR®:**
-                    - Dal {formatta_data(inizio_periodo_precedente + DateOffset(days=1))} al {formatta_data(inizio_ultimo_periodo)}, rispetto al periodo dal {formatta_data(inizio_ultimo_periodo + DateOffset(days=1))} al {formatta_data(fine_ultimo_periodo)}.
-                    - **{'Incremento' if percentuale_incremento > 0 else 'Decremento'} percentuale:** {abs(percentuale_incremento):.2f}%
-                """
-                
-                if percentuale_incremento > 0:
-                    st.success(messaggio)
-                else:
-                    st.error(messaggio)
 
             
             ## st.write("Anteprima dei dati caricati:")
