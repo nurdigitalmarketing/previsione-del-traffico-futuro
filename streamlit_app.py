@@ -165,35 +165,53 @@ if uploaded_file is not None:
                 return data.strftime('%d %B %Y')
             
             # Calcolo delle date
-            fine_previsioni = forecast['ds'].max()
-            inizio_previsioni = fine_previsioni - DateOffset(days=365)
+            fine_ultimo_periodo = forecast['ds'].max()
+            inizio_ultimo_periodo = fine_ultimo_periodo - DateOffset(days=365)
+            inizio_periodo_precedente = inizio_ultimo_periodo - DateOffset(days=365)
             
-            # Tentativo di trovare il valore della tendenza per la data di inizio
-            traffic_primo_mese_data = forecast[forecast['ds'] == inizio_previsioni]
+            # Filtraggio del DataFrame per i due periodi e calcolo delle somme
+            somma_ultimo_periodo = forecast[(forecast['ds'] > inizio_ultimo_periodo) & (forecast['ds'] <= fine_ultimo_periodo)]['yhat'].sum()
+            somma_periodo_precedente = forecast[(forecast['ds'] > inizio_periodo_precedente) & (forecast['ds'] <= inizio_ultimo_periodo)]['yhat'].sum()
             
-            if not traffic_primo_mese_data.empty:
-                traffic_primo_mese_trend = traffic_primo_mese_data['trend'].iloc[0]
-                traffic_ultimo_mese = forecast[forecast['ds'] == fine_previsioni]['yhat'].sum()
+            incremento = somma_ultimo_periodo - somma_periodo_precedente
+            percentuale_incremento = (incremento / somma_periodo_precedente) * 100
             
-                incremento = traffic_ultimo_mese - traffic_primo_mese_trend
-                percentuale_incremento = (incremento / traffic_primo_mese_trend) * 100
+            # Costruzione del messaggio da visualizzare e scelta del metodo di visualizzazione in base all'incremento o decremento
+            messaggio = f"""
+                **Confronto della variazione del traffico tra i periodi con il metodo NUR®:**
+                - Dal {formatta_data(inizio_periodo_precedente + DateOffset(days=1))} al {formatta_data(inizio_ultimo_periodo)}, rispetto al periodo dal {formatta_data(inizio_ultimo_periodo + DateOffset(days=1))} al {formatta_data(fine_ultimo_periodo)}.
+                - **{'Incremento' if percentuale_incremento > 0 else 'Decremento'} percentuale:** {abs(percentuale_incremento):.2f}%
+            """
             
-                # Costruzione del messaggio da visualizzare
+            if percentuale_incremento > 0:
+                st.success(messaggio)
+            else:
+                st.error(messaggio)
+
+
+                # Calcolo delle date
+                fine_ultimo_periodo = forecast['ds'].max()
+                inizio_ultimo_periodo = fine_ultimo_periodo - DateOffset(days=365)
+                inizio_periodo_precedente = inizio_ultimo_periodo - DateOffset(days=365)
+                
+                # Filtraggio del DataFrame per i due periodi e calcolo delle somme
+                somma_ultimo_periodo = forecast[(forecast['ds'] > inizio_ultimo_periodo) & (forecast['ds'] <= fine_ultimo_periodo)]['yhat'].sum()
+                somma_periodo_precedente = forecast[(forecast['ds'] > inizio_periodo_precedente) & (forecast['ds'] <= inizio_ultimo_periodo)]['yhat'].sum()
+                
+                incremento = somma_ultimo_periodo - somma_periodo_precedente
+                percentuale_incremento = (incremento / somma_periodo_precedente) * 100
+                
+                # Costruzione del messaggio da visualizzare e scelta del metodo di visualizzazione in base all'incremento o decremento
                 messaggio = f"""
-                    **Stima della variazione del traffico con il metodo NUR®:**
-                    - Si stima una variazione di traffico dal {formatta_data(inizio_previsioni)} al {formatta_data(fine_previsioni)}.
+                    **Confronto della variazione del traffico tra i periodi con il metodo NUR®:**
+                    - Dal {formatta_data(inizio_periodo_precedente + DateOffset(days=1))} al {formatta_data(inizio_ultimo_periodo)}, rispetto al periodo dal {formatta_data(inizio_ultimo_periodo + DateOffset(days=1))} al {formatta_data(fine_ultimo_periodo)}.
                     - **{'Incremento' if percentuale_incremento > 0 else 'Decremento'} percentuale:** {abs(percentuale_incremento):.2f}%
                 """
-            
-                # Visualizzazione del messaggio appropriato in base all'incremento o decremento
+                
                 if percentuale_incremento > 0:
                     st.success(messaggio)
                 else:
                     st.error(messaggio)
-            else:
-                st.error("Nessuna corrispondenza esatta per la data inizio previsioni nella colonna 'trend', controllare i dati.")
-
-
 
             
             ## st.write("Anteprima dei dati caricati:")
