@@ -158,31 +158,34 @@ if uploaded_file is not None:
             m.fit(traffic)
             future = m.make_future_dataframe(periods=365)
             forecast = m.predict(future)
-
-            # Calcolo e visualizzazione dell'incremento previsto del traffico
+            
+            
+            # Determinazione dell'ultima data di previsione
             fine_previsioni = forecast['ds'].max()
+            
+            # Calcolo della data di inizio previsioni, esattamente 365 giorni prima
             inizio_previsioni = fine_previsioni - DateOffset(days=365)
             
-            # Filtraggio per ottenere il traffico del "primo mese" esattamente 365 giorni prima della fine delle previsioni
+            # Tentativo di trovare il valore della tendenza per la data di inizio
             traffic_primo_mese_data = forecast[forecast['ds'] == inizio_previsioni]
             
-            # Se esiste una corrispondenza esatta per la data
             if not traffic_primo_mese_data.empty:
-                traffic_primo_mese = traffic_primo_mese_data['yhat'].sum()
-                # Filtraggio per ottenere il traffico dell'ultimo mese (fine delle previsioni)
+                # Prendendo il valore della tendenza alla data di inizio previsioni
+                traffic_primo_mese_trend = traffic_primo_mese_data['trend'].iloc[0]
+                # Assumendo di voler ancora usare il valore yhat come "traffic_ultimo_mese"
                 traffic_ultimo_mese = forecast[forecast['ds'] == fine_previsioni]['yhat'].sum()
             
-                incremento = traffic_ultimo_mese - traffic_primo_mese
-                percentuale_incremento = (incremento / traffic_primo_mese) * 100
+                incremento = traffic_ultimo_mese - traffic_primo_mese_trend
+                percentuale_incremento = (incremento / traffic_primo_mese_trend) * 100
             
                 # Visualizzazione dei risultati con Streamlit
                 st.info(f"""
                     **Stima dell'aumento del traffico con il metodo NUR®:**
-                    - Si stima un aumento di traffico da {formatta_numero(int(traffic_primo_mese))} utenti nel primo mese a {formatta_numero(int(traffic_ultimo_mese))} utenti nell'ultimo mese del periodo di previsione.
+                    - Si stima un aumento di traffico da {formatta_numero(int(traffic_primo_mese_trend))} (trend iniziale) a {formatta_numero(int(traffic_ultimo_mese))} utenti (previsione finale) nell'ultimo mese del periodo di previsione.
                     - **Incremento percentuale:** {percentuale_incremento:.2f}%
                 """)
             else:
-                st.error("Nessuna corrispondenza esatta per la data inizio previsioni, controllare i dati.")
+                st.error("Nessuna corrispondenza esatta per la data inizio previsioni nella colonna 'trend', controllare i dati.")
 
 
             
