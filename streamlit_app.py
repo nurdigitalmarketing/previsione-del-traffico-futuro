@@ -158,7 +158,7 @@ if uploaded_file is not None:
             m.fit(traffic)
             future = m.make_future_dataframe(periods=365)
             forecast = m.predict(future)
-            
+
             # Calcolo e visualizzazione dell'incremento previsto del traffico
             fine_previsioni = forecast['ds'].max()
             inizio_previsioni = fine_previsioni - DateOffset(days=365)
@@ -170,12 +170,6 @@ if uploaded_file is not None:
             # Se esiste una corrispondenza esatta per la data
             if not traffic_primo_mese_data.empty:
                 traffic_primo_mese = traffic_primo_mese_data['yhat'].sum()
-            else:
-                print("Nessuna corrispondenza esatta per la data inizio previsioni, controllare i dati.")
-                traffic_primo_mese = None
-            
-            # Continuare solo se è stato trovato un valore per traffic_primo_mese
-            if traffic_primo_mese is not None:
                 # Filtraggio per ottenere il traffico dell'ultimo mese (fine delle previsioni)
                 traffic_ultimo_mese = forecast[forecast['ds'] == fine_previsioni]['yhat'].sum()
             
@@ -184,7 +178,7 @@ if uploaded_file is not None:
             
                 print(f"Incremento: {incremento}, Percentuale di incremento: {percentuale_incremento}%")
             else:
-                print("Impossibile calcolare l'incremento senza una data di inizio valida.")
+                print("Nessuna corrispondenza esatta per la data inizio previsioni, controllare i dati.")
 
             
             ## st.write("Anteprima dei dati caricati:")
