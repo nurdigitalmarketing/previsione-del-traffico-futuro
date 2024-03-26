@@ -157,34 +157,19 @@ if uploaded_file is not None:
             m.fit(traffic)
             future = m.make_future_dataframe(periods=365)
             forecast = m.predict(future)
-            
+
             # Calcolo e visualizzazione dell'incremento previsto del traffico
-            
-            # Assumiamo che 'traffic' contenga i dati storici e 'forecast' le previsioni generate da Prophet
-            
-            # Determinazione dell'ultimo mese di dati storici
-            ultimo_mese_storico = traffic['ds'].max().to_period('M')
-            
-            # Filtro delle previsioni per i dati futuri esclusivamente
-            forecast_futuro = forecast[forecast['ds'] > ultimo_mese_storico.to_timestamp()]
-            
-            # Determinazione del primo e ultimo mese di previsione per calcolare l'incremento
-            primo_mese_previsione = forecast_futuro['ds'].min().to_period('M')
-            ultimo_mese_previsione = forecast_futuro['ds'].max().to_period('M')
-            
-            # Calcolo del traffico medio mensile per il primo e ultimo mese di previsione
-            traffico_medio_primo_mese_previsione = forecast_futuro[forecast_futuro['ds'].dt.to_period('M') == primo_mese_previsione]['yhat'].mean()
-            traffico_medio_ultimo_mese_previsione = forecast_futuro[forecast_futuro['ds'].dt.to_period('M') == ultimo_mese_previsione]['yhat'].mean()
-            
-            # Calcolo dell'incremento percentuale
-            incremento_percentuale = ((traffico_medio_ultimo_mese_previsione - traffico_medio_primo_mese_previsione) / traffico_medio_primo_mese_previsione) * 100
-            
-            # Visualizzazione dei risultati
+            inizio_previsioni = forecast['ds'].min()
+            fine_previsioni = forecast['ds'].max()
+            traffic_primo_mese = forecast[forecast['ds'] == inizio_previsioni]['yhat'].sum()
+            traffic_ultimo_mese = forecast[forecast['ds'] == fine_previsioni]['yhat'].sum()
+            incremento = traffic_ultimo_mese - traffic_primo_mese
+            percentuale_incremento = (incremento / traffic_primo_mese) * 100
+
             st.info(f"""
-                **Stima dell'incremento del traffico:**
-                - Traffico medio nel primo mese di previsione: {formatta_numero(int(traffico_medio_primo_mese_previsione))} utenti
-                - Traffico medio nell'ultimo mese di previsione: {formatta_numero(int(traffico_medio_ultimo_mese_previsione))} utenti
-                - **Incremento percentuale previsto:** {incremento_percentuale:.2f}%
+                **Stima dell'aumento del traffico con il metodo NUR®:**
+                - Si stima un aumento di traffico da {formatta_numero(int(traffic_primo_mese))} utenti nel primo mese a {formatta_numero(int(traffic_ultimo_mese))} utenti nell'ultimo mese del periodo di previsione.
+                - **Incremento percentuale:** {percentuale_incremento:.2f}%
             """)
             
             ## st.write("Anteprima dei dati caricati:")
