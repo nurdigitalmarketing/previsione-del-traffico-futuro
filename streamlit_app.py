@@ -163,7 +163,6 @@ if uploaded_file is not None:
             fine_previsioni = forecast['ds'].max()
             inizio_previsioni = fine_previsioni - DateOffset(days=365)
             
-            # Assicurarsi che traffic_primo_mese sia esattamente 365 giorni prima di traffic_ultimo_mese
             # Filtraggio per ottenere il traffico del "primo mese" esattamente 365 giorni prima della fine delle previsioni
             traffic_primo_mese_data = forecast[forecast['ds'] == inizio_previsioni]
             
@@ -176,17 +175,15 @@ if uploaded_file is not None:
                 incremento = traffic_ultimo_mese - traffic_primo_mese
                 percentuale_incremento = (incremento / traffic_primo_mese) * 100
             
-                print(f"Incremento: {incremento}, Percentuale di incremento: {percentuale_incremento}%")
+                # Visualizzazione dei risultati con Streamlit
+                st.info(f"""
+                    **Stima dell'aumento del traffico con il metodo NUR®:**
+                    - Si stima un aumento di traffico da {formatta_numero(int(traffic_primo_mese))} utenti nel primo mese a {formatta_numero(int(traffic_ultimo_mese))} utenti nell'ultimo mese del periodo di previsione.
+                    - **Incremento percentuale:** {percentuale_incremento:.2f}%
+                """)
             else:
-                print("Nessuna corrispondenza esatta per la data inizio previsioni, controllare i dati.")
-                
+                st.error("Nessuna corrispondenza esatta per la data inizio previsioni, controllare i dati.")
 
-            st.info(f"""
-                **Stima dell'aumento del traffico con il metodo NUR®:**
-                - Si stima un aumento di traffico da {formatta_numero(int(traffic_primo_mese))} utenti nel primo mese a {formatta_numero(int(traffic_ultimo_mese))} utenti nell'ultimo mese del periodo di previsione.
-                - **Incremento percentuale:** {percentuale_incremento:.2f}%
-                - Incremento: {incremento}, Percentuale di incremento: {percentuale_incremento}%
-            """)
 
             
             ## st.write("Anteprima dei dati caricati:")
