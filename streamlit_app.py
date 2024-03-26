@@ -179,10 +179,14 @@ if uploaded_file is not None:
                 print(f"Incremento: {incremento}, Percentuale di incremento: {percentuale_incremento}%")
             else:
                 print("Nessuna corrispondenza esatta per la data inizio previsioni, controllare i dati.")
+                
 
-             st.info(f"""
-                   Incremento: {incremento}, Percentuale di incremento: {percentuale_incremento}%
-             """)      
+            st.info(f"""
+                **Stima dell'aumento del traffico con il metodo NUR®:**
+                - Si stima un aumento di traffico da {formatta_numero(int(traffic_primo_mese))} utenti nel primo mese a {formatta_numero(int(traffic_ultimo_mese))} utenti nell'ultimo mese del periodo di previsione.
+                - **Incremento percentuale:** {percentuale_incremento:.2f}%
+                - Incremento: {incremento}, Percentuale di incremento: {percentuale_incremento}%
+            """)
 
             
             ## st.write("Anteprima dei dati caricati:")
