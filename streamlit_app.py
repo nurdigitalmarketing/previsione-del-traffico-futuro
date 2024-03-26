@@ -172,7 +172,6 @@ if uploaded_file is not None:
                 mese = mesi_italiani[data.month]
                 anno = data.year
                 return f"{giorno} {mese} {anno}"
-
             
             # Calcolo delle date
             fine_ultimo_periodo = forecast['ds'].max()
@@ -186,13 +185,15 @@ if uploaded_file is not None:
             incremento = somma_ultimo_periodo - somma_periodo_precedente
             percentuale_incremento = (incremento / somma_periodo_precedente) * 100
             
-            # Costruzione del messaggio da visualizzare e scelta del metodo di visualizzazione in base all'incremento o decremento
+            # Costruzione del messaggio da visualizzare
             messaggio = f"""
-                **Confronto della variazione del traffico tra i periodi con il metodo NUR®:**
-                - Dal {formatta_data(inizio_periodo_precedente + DateOffset(days=1))} al {formatta_data(inizio_ultimo_periodo)}, rispetto al periodo dal {formatta_data(inizio_ultimo_periodo + DateOffset(days=1))} al {formatta_data(fine_ultimo_periodo)}.
+                **Confronto del traffico tra i periodi:**
+                - Dal {formatta_data(inizio_periodo_precedente + DateOffset(days=1))} al {formatta_data(inizio_ultimo_periodo)}: {int(somma_periodo_precedente)} utenti
+                - Dal {formatta_data(inizio_ultimo_periodo + DateOffset(days=1))} al {formatta_data(fine_ultimo_periodo)}: {int(somma_ultimo_periodo)} utenti
                 - **{'Incremento' if percentuale_incremento > 0 else 'Decremento'} percentuale:** {abs(percentuale_incremento):.2f}%
             """
             
+            # Visualizzazione del messaggio con st.success o st.error in base all'incremento o decremento
             if percentuale_incremento > 0:
                 st.success(messaggio)
             else:
