@@ -3,6 +3,7 @@ import pandas as pd
 from prophet import Prophet
 from prophet.plot import plot_plotly, plot_components_plotly
 from datetime import datetime, timedelta
+from pandas.tseries.offsets import DateOffset
 import numpy as np
 
 def formatta_numero(numero):
@@ -157,14 +158,22 @@ if uploaded_file is not None:
             m.fit(traffic)
             future = m.make_future_dataframe(periods=365)
             forecast = m.predict(future)
-
+            
             # Calcolo e visualizzazione dell'incremento previsto del traffico
-            inizio_previsioni = forecast['ds'].min()
             fine_previsioni = forecast['ds'].max()
-            traffic_primo_mese = forecast[forecast['ds'] == inizio_previsioni]['yhat'].sum()
+            inizio_previsioni = fine_previsioni - DateOffset(months=12)
+            
+            # Filtraggio per ottenere il traffico del "primo mese" 12 mesi prima della fine delle previsioni
+            traffic_primo_mese = forecast[forecast['ds'] >= inizio_previsioni]['yhat'].iloc[0]
+            
+            # Filtraggio per ottenere il traffico dell'ultimo mese (fine delle previsioni)
             traffic_ultimo_mese = forecast[forecast['ds'] == fine_previsioni]['yhat'].sum()
+            
             incremento = traffic_ultimo_mese - traffic_primo_mese
             percentuale_incremento = (incremento / traffic_primo_mese) * 100
+            
+            print(f"Incremento: {incremento}, Percentuale di incremento: {percentuale_incremento}%")
+
 
             st.info(f"""
                 **Stima dell'aumento del traffico con il metodo NUR®:**
