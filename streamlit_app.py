@@ -180,6 +180,10 @@ if uploaded_file is not None:
             else:
                 print("Nessuna corrispondenza esatta per la data inizio previsioni, controllare i dati.")
 
+             st.info(f"""
+                   Incremento: {incremento}, Percentuale di incremento: {percentuale_incremento}%
+             """)      
+
             
             ## st.write("Anteprima dei dati caricati:")
             ## st.write(traffic.head())
