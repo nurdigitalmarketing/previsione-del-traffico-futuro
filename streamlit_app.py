@@ -177,26 +177,30 @@ if uploaded_file is not None:
             def formatta_numero(numero):
                 return f"{numero:,}".replace(",", ".")
             
-            # Calcolo delle date
+            # Assumiamo che forecast sia il DataFrame contenente le previsioni con le colonne 'ds' per la data e 'yhat' per la previsione
+            
+            # Calcolo delle date di inizio e fine per i due periodi
             fine_ultimo_periodo = forecast['ds'].max()
             inizio_ultimo_periodo = fine_ultimo_periodo - DateOffset(days=365)
             inizio_periodo_precedente = inizio_ultimo_periodo - DateOffset(days=365)
             
-            # Filtraggio del DataFrame per i due periodi e calcolo delle somme
-            somma_ultimo_periodo = forecast[(forecast['ds'] > inizio_ultimo_periodo) & (forecast['ds'] <= fine_ultimo_periodo)]['yhat'].sum()
-            somma_periodo_precedente = forecast[(forecast['ds'] > inizio_periodo_precedente) & (forecast['ds'] <= inizio_ultimo_periodo)]['yhat'].sum()
+            # Filtraggio dei dati per ciascun periodo
+            dati_ultimo_periodo = forecast[(forecast['ds'] > inizio_ultimo_periodo) & (forecast['ds'] <= fine_ultimo_periodo)]
+            dati_periodo_precedente = forecast[(forecast['ds'] > inizio_periodo_precedente) & (forecast['ds'] <= inizio_ultimo_periodo)]
             
+            # Calcolo delle somme del traffico (o della metrica di interesse) per ciascun periodo
+            somma_ultimo_periodo = dati_ultimo_periodo['yhat'].sum()
+            somma_periodo_precedente = dati_periodo_precedente['yhat'].sum()
+            
+            # Calcolo dell'incremento percentuale
             incremento = somma_ultimo_periodo - somma_periodo_precedente
-            percentuale_incremento = (incremento / somma_periodo_precedente) * 100
+            percentuale_incremento = (incremento / somma_periodo_precedente) * 100 if somma_periodo_precedente != 0 else 0
             
-            # Costruzione del messaggio da visualizzare
-            messaggio = f"""
-                **Confronto del traffico tra i periodi:**
-                - Dal {formatta_data(inizio_periodo_precedente + DateOffset(days=1))} al {formatta_data(inizio_ultimo_periodo)}: {formatta_numero(int(somma_periodo_precedente))} utenti
-                - Dal {formatta_data(inizio_ultimo_periodo + DateOffset(days=1))} al {formatta_data(fine_ultimo_periodo)}: {formatta_numero(int(somma_ultimo_periodo))} utenti
-                - **{'Incremento' if percentuale_incremento > 0 else 'Decremento'} percentuale:** {abs(percentuale_incremento):.2f}%
-            """
-            
+            # Stampa dei risultati
+            print(f"Somma ultimo periodo (dal {inizio_ultimo_periodo.date()} al {fine_ultimo_periodo.date()}): {somma_ultimo_periodo}")
+            print(f"Somma periodo precedente (dal {inizio_periodo_precedente.date()} al {inizio_ultimo_periodo.date()}): {somma_periodo_precedente}")
+            print(f"Incremento percentuale: {percentuale_incremento:.2f}%")
+                        
             # Visualizzazione del messaggio con st.success o st.error in base all'incremento o decremento
             if percentuale_incremento > 0:
                 st.success(messaggio)
