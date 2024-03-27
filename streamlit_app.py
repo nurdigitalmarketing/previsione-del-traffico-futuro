@@ -176,55 +176,31 @@ if uploaded_file is not None:
             # Funzione per formattare i numeri con i separatori delle migliaia
             def formatta_numero(numero):
                 return f"{numero:,}".replace(",", ".")
-
-
-            def calcola_incremento_percentuale(traffic, periodo_1_inizio, periodo_1_fine, periodo_2_inizio, periodo_2_fine):
-                """
-                Calcola l'incremento percentuale del traffico tra due periodi specificati.
-                
-                Args:
-                    traffic (pd.DataFrame): DataFrame contenente i dati di traffico con colonne 'ds' per le date e 'y' per i valori.
-                    periodo_1_inizio (str): Data di inizio del primo periodo (formato 'YYYY-MM-DD').
-                    periodo_1_fine (str): Data di fine del primo periodo (formato 'YYYY-MM-DD').
-                    periodo_2_inizio (str): Data di inizio del secondo periodo (formato 'YYYY-MM-DD').
-                    periodo_2_fine (str): Data di fine del secondo periodo (formato 'YYYY-MM-DD').
-                
-                Returns:
-                    str: Messaggio che riassume l'incremento percentuale del traffico tra i due periodi.
-                """
-                # Conversione delle stringhe di date in oggetti datetime
-                periodo_1_inizio = pd.to_datetime(periodo_1_inizio)
-                periodo_1_fine = pd.to_datetime(periodo_1_fine)
-                periodo_2_inizio = pd.to_datetime(periodo_2_inizio)
-                periodo_2_fine = pd.to_datetime(periodo_2_fine)
             
-                # Filtraggio dei dati per i due periodi
-                dati_periodo_1 = traffic[(traffic['ds'] >= periodo_1_inizio) & (traffic['ds'] <= periodo_1_fine)]
-                dati_periodo_2 = traffic[(traffic['ds'] >= periodo_2_inizio) & (traffic['ds'] <= periodo_2_fine)]
+            # Calcolo delle date
+            fine_ultimo_periodo = forecast['ds'].max()
+            inizio_ultimo_periodo = fine_ultimo_periodo - DateOffset(days=365)
+            inizio_periodo_precedente = inizio_ultimo_periodo - DateOffset(days=365)
             
-                # Calcolo delle somme per ogni periodo
-                somma_periodo_1 = dati_periodo_1['y'].sum()
-                somma_periodo_2 = dati_periodo_2['y'].sum()
+            # Filtraggio del DataFrame per i due periodi e calcolo delle somme
+            somma_ultimo_periodo = forecast[(forecast['ds'] > inizio_ultimo_periodo) & (forecast['ds'] <= fine_ultimo_periodo)]['yhat'].sum()
+            somma_periodo_precedente = forecast[(forecast['ds'] > inizio_periodo_precedente) & (forecast['ds'] <= inizio_ultimo_periodo)]['yhat'].sum()
             
-                # Calcolo dell'incremento/decremento percentuale
-                incremento = somma_periodo_2 - somma_periodo_1
-                percentuale_incremento = (incremento / somma_periodo_1) * 100 if somma_periodo_1 != 0 else float('inf')
+            incremento = somma_ultimo_periodo - somma_periodo_precedente
+            percentuale_incremento = (incremento / somma_periodo_precedente) * 100
             
-                # Creazione del messaggio di output
-                messaggio = (f"Somma periodo 1 ({periodo_1_inizio.strftime('%d-%m-%Y')} a {periodo_1_fine.strftime('%d-%m-%Y')}): "
-                             f"{somma_periodo_1}\n"
-                             f"Somma periodo 2 ({periodo_2_inizio.strftime('%d-%m-%Y')} a {periodo_2_fine.strftime('%d-%m-%Y')}): "
-                             f"{somma_periodo_2}\n"
-                             f"Incremento percentuale: {percentuale_incremento:.2f}%")
-                
-                return messaggio
+            # Costruzione del messaggio da visualizzare
+            messaggio = f"""
+                **Confronto del traffico tra i periodi:**
+                - Dal {formatta_data(inizio_periodo_precedente + DateOffset(days=1))} al {formatta_data(inizio_ultimo_periodo)}: {formatta_numero(int(somma_periodo_precedente))} utenti
+                - Dal {formatta_data(inizio_ultimo_periodo + DateOffset(days=1))} al {formatta_data(fine_ultimo_periodo)}: {formatta_numero(int(somma_ultimo_periodo))} utenti
+                - **{'Incremento' if percentuale_incremento > 0 else 'Decremento'} percentuale:** {abs(percentuale_incremento):.2f}%
+            """
             
-            # Esempio di utilizzo della funzione
-            # traffic è il tuo DataFrame già preparato con 'ds' per date e 'y' per i valori di traffico
-            # Assicurati di sostituire le date qui sotto con le date di interesse
-            messaggio = calcola_incremento_percentuale(traffic, '2022-03-21', '2023-03-20', '2023-03-21', '2024-03-20')
-            print(messaggio)
-
+            # Visualizzazione del messaggio con st.success o st.error in base all'incremento o decremento
+            if percentuale_incremento > 0:
+                st.success(messaggio)
+            else:
                 st.error(messaggio)
 
 
