@@ -49,9 +49,9 @@ def effettua_previsioni(modello, periodi=365):
 # Esempio di utilizzo delle funzioni ottimizzate
 # Nota: Le chiamate alle funzioni saranno decommentate e utilizzate nel codice finale per dimostrare l'utilizzo.
 
- traffic_df = pd.read_csv('percorso_del_file_csv')
- modello = prepara_dati_e_modello(traffic_df)
- previsioni = effettua_previsioni(modello)
+    traffic_df = pd.read_csv('percorso_del_file_csv')
+    modello = prepara_dati_e_modello(traffic_df)
+    previsioni = effettua_previsioni(modello)
 
 # Nota: Questo è un esempio di come potrebbero essere utilizzate le funzioni ottimizzate. 
 # Le funzioni di lettura del file CSV, visualizzazione dei risultati e gestione dell'UI di Streamlit 
