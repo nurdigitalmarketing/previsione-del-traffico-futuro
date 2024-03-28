@@ -1,153 +1,201 @@
-    import streamlit as st
-    import pandas as pd
-    from prophet import Prophet
-    from prophet.plot import plot_plotly, plot_components_plotly
-    from datetime import datetime, timedelta
-    from pandas.tseries.offsets import DateOffset
-    import numpy as np
+import streamlit as st
+import pandas as pd
+from prophet import Prophet
+from prophet.plot import plot_plotly, plot_components_plotly
+from datetime import datetime, timedelta
+from pandas.tseries.offsets import DateOffset
+import numpy as np
 
-    def formatta_numero(numero):
-        """Formatta il numero con il punto come separatore delle migliaia.
+def formatta_numero(numero):
+    """Formatta il numero con il punto come separatore delle migliaia.
     
-        Args:
-            numero (int): Il numero da formattare.
+    Args:
+        numero (int): Il numero da formattare.
     
-        Returns:
-            str: Il numero formattato con il punto come separatore delle migliaia.
-        """
-        num_str = f"{numero:,}"  # Formatta il numero con la virgola come separatore delle migliaia
-        return num_str.replace(',', '.')  # Sostituisce la virgola con il punto
+    Returns:
+        str: Il numero formattato con il punto come separatore delle migliaia.
+    """
+    num_str = f"{numero:,}"  # Formatta il numero con la virgola come separatore delle migliaia
+    return num_str.replace(',', '.')  # Sostituisce la virgola con il punto
 
-    # Esempio di utilizzo della funzione
-    numero_formattato = formatta_numero(1234567)
-    print(numero_formattato)  # Output: 1.234.567
+# Esempio di utilizzo della funzione
+numero_formattato = formatta_numero(1234567)
+print(numero_formattato)  # Output: 1.234.567
 
 
-        st.title('Previsione del Traffico Futuro')
-    
-        st.markdown(
-        """
-        ## Introduzione
-    
-        Questo strumento è stato sviluppato per fornire previsioni sul traffico futuro basandosi sull'export dei dati degli utenti da _Google Analytics_. Attraverso l'utilizzo di modelli di previsione avanzati, facilita la comprensione delle tendenze future basate sui dati storici.
-    
-        ## Funzionamento
-    
-        Per garantire previsioni accurate, segui i passaggi dettagliati relativi all'origine dei tuoi dati. Ecco come preparare i dati esportati da Google Analytics.
-        """)
-    
-        with st.expander("Istruzioni"):
-            st.markdown(
+st.title('Previsione del Traffico Futuro')
+
+st.markdown(
+"""
+## Introduzione
+
+Questo strumento è stato sviluppato per fornire previsioni sul traffico futuro basandosi sull'export dei dati degli utenti da _Google Analytics_ o sui dati di ricerca organica da _Ahrefs_ o _Semrush_. Attraverso l'utilizzo di modelli di previsione avanzati, facilita la comprensione delle tendenze future basate sui dati storici.
+
+## Funzionamento
+
+Per garantire previsioni accurate, segui i passaggi dettagliati relativi all'origine dei tuoi dati. Ecco come preparare i dati esportati da Google Analytics, Ahrefs o Semrush.
+""")
+
+with st.expander("Da Google Analytics"):
+    st.markdown(
+    """
+    1. **Esportazione dei dati:**
+       - Accedi a Google Analytics.
+       - Vai alla sezione "Rapporti" e seleziona le metriche di traffico che desideri analizzare (es. utenti, sessioni).
+       - Esporta i dati nel formato CSV.
+
+    2. **Pulizia dei dati:**
+       - Apri il file CSV su Google Fogli.
+       - Elimina tutte le righe dalla 1 alla 8 e dalla riga dopo l'ultima "Ennesima settimana" del primo blocco di data e utenti.
+       - Fatto ciò, assicurati che le colonne siano nominate correttamente: la colonna con le date deve essere rinominata in `Date` e la colonna con i volumi di traffico in `Organic Traffic`.
+
+        _Qui puoi trovare un [esempio](https://drive.google.com/file/d/1v4ZpiG8Kijwn1uRm02S1yMRQkWH1G4ov/view?usp=sharing) di come dovrebbe apparire._
+
+    3. **Selezione del range di date:**
+       - Nello strumento, specifica il range di date che vuoi analizzare inserendo la data di inizio e di fine nel formato `YYYYMMDD`.
+       - Questo aiuterà lo strumento a calibrare correttamente le previsioni sul periodo di interesse.
+
+    4. **Caricamento del file:**
+       - Utilizza il pulsante di upload per caricare il tuo file CSV pulito.
+    """
+    )
+
+with st.expander("Da Ahrefs"):
+    st.markdown(
+    """
+    1. **Esportazione dei dati:**
+       - Accedi ad Ahrefs e vai alla sezione di ricerca organica per il tuo sito.
+       - Seleziona il periodo di tempo desiderato e esporta i dati relativi al traffico di ricerca organica.
+
+    2. **Pulizia dei dati:**
+       - Apri il file esportato con Google Fogli.
+       - Rinomina la colonna con le date in `Date` e quella con i volumi di traffico in `Organic Traffic`.
+       - Rimuovi le righe e le colonne non pertinenti che non contengono dati di traffico o date.
+
+       _Qui puoi trovare un [esempio](https://drive.google.com/file/d/1v4cqG_v8b85t9A7OImsAINKGUCh_eRey/view?usp=sharing) di come dovrebbe apparire._
+
+    3. **Caricamento del file:**
+       - Carica il file CSV pulito attraverso l'interfaccia di caricamento fornita dallo strumento.
+    """
+    )
+
+with st.expander("Da Semrush"):
+    st.markdown(
+    """
+    1. **Esportazione dei dati:**
+       - Accedi a Semrush e vai alla sezione di _panoramica dominio_ per il tuo sito.
+       - Seleziona il periodo di tempo desiderato (i.e. 2A) e esporta i dati relativi al traffico di ricerca organica.
+
+    2. **Pulizia dei dati:**
+       - Apri il file esportato con Google Fogli.
+       - Rimuovi le colonne A, B, C e D e le colonne dalla 3 alla 9 comprese.
+       - Rinomina la colonna `Summary` in `Date` e la cella sotto `Summary` in `Organic Traffic`.
+       - Esporta il file in CSV ed importalo nello strumento [CSV rows and columns converter](https://onlinecsvtools.com/convert-csv-rows-to-columns) cliccando su _import from file_ sotto _input csv_.
+       - A questo punto, sotto _output csv_, copia il risultato ottenuto.
+       - Apri un nuovo foglio su Google Fogli e incolla il risultato ottenuto. Vai su `Dati` e clicca su `Suddividi il testo in colonne`.
+       - Esporta il file in formato CSV.
+
+       _Qui puoi trovare un [esempio](https://drive.google.com/file/d/1ZkfuqbHcxQhm5zX8L_nKf0OPWAYTg3Hr/view?usp=sharing) di come dovrebbe apparire._
+
+    3. **Caricamento del file:**
+       - Carica il file CSV pulito attraverso l'interfaccia di caricamento fornita dallo strumento.
+    """
+    )
+
+st.markdown ('---')
+
+# Campo di selezione per l'origine dei dati
+origine_dati = st.selectbox("1_ Seleziona l'origine dei dati:", ['Scegli...', 'Ahrefs'])
+
+# Caricamento del file CSV
+uploaded_file = st.file_uploader("2_ Carica il file CSV del traffico", type="csv")
+if uploaded_file is not None and origine_dati == 'Ahrefs':
+    traffic = pd.read_csv(uploaded_file)
+    if 'Date' not in traffic.columns:
+        st.error("Assicurati che il file CSV abbia la colonna 'Date' nel formato 'YYYY-MM-DD'.")
+    else:
+        traffic.rename(columns={'Date': 'ds', 'Organic Traffic': 'y'}, inplace=True)
+        traffic['ds'] = pd.to_datetime(traffic['ds'])
+
+    # Verifica delle colonne
+    if not {"ds", "y"}.issubset(traffic.columns):
+        st.error("Assicurati che il DataFrame abbia le colonne 'ds' per la data e 'y' per la variabile target.")
+    else:
+        updates = pd.DataFrame({
+            'holiday': 'Google Update',
+            'ds': pd.to_datetime(['2015-07-17', '2016-01-08',
+                                  '2016-09-27', '2017-03-08', '2017-07-09', '2018-03-08', '2018-04-17',
+                                  '2018-08-01', '2019-03-12', '2019-06-03', '2019-09-24', '2019-10-25',
+                                  '2019-12-09', '2020-01-13', '2020-05-04', '2020-12-03', '2021-06-02',
+                                  '2021-07-01', '2021-11-17', '2022-05-25', '2023-09-15', '2023-10-05',
+                                  '2023-11-02', '2023-11-08', '2024-03-05']),
+            'lower_window': 0,
+            'upper_window': 1,
+        })
+
+            m = Prophet(holidays=updates)
+            m.fit(traffic)
+            future = m.make_future_dataframe(periods=365)
+            forecast = m.predict(future)
+
+
+            # Mappatura dei mesi in italiano
+            mesi_italiani = {
+                1: 'gennaio', 2: 'febbraio', 3: 'marzo', 4: 'aprile', 5: 'maggio', 6: 'giugno',
+                7: 'luglio', 8: 'agosto', 9: 'settembre', 10: 'ottobre', 11: 'novembre', 12: 'dicembre'
+            }
+            
+            # Funzione per formattare le date in modo leggibile in italiano
+            def formatta_data(data):
+                giorno = data.day
+                mese = mesi_italiani[data.month]
+                anno = data.year
+                return f"{giorno} {mese} {anno}"
+            
+            # Funzione per formattare i numeri con i separatori delle migliaia
+            def formatta_numero(numero):
+                return f"{numero:,}".replace(",", ".")
+            
+            # Calcolo delle date
+            fine_ultimo_periodo = forecast['ds'].max()
+            inizio_ultimo_periodo = fine_ultimo_periodo - DateOffset(days=365)
+            inizio_periodo_precedente = inizio_ultimo_periodo - DateOffset(days=365)
+            
+            # Filtraggio del DataFrame per i due periodi e calcolo delle somme
+            somma_ultimo_periodo = forecast[(forecast['ds'] > inizio_ultimo_periodo) & (forecast['ds'] <= fine_ultimo_periodo)]['yhat'].sum()
+            somma_periodo_precedente = forecast[(forecast['ds'] > inizio_periodo_precedente) & (forecast['ds'] <= inizio_ultimo_periodo)]['yhat'].sum()
+            
+            incremento = somma_ultimo_periodo - somma_periodo_precedente
+            percentuale_incremento = (incremento / somma_periodo_precedente) * 100
+            
+            # Costruzione del messaggio da visualizzare
+            messaggio = f"""
+                **Confronto del traffico tra i periodi:**
+                - Dal {formatta_data(inizio_periodo_precedente + DateOffset(days=1))} al {formatta_data(inizio_ultimo_periodo)}: {formatta_numero(int(somma_periodo_precedente))} utenti
+                - Dal {formatta_data(inizio_ultimo_periodo + DateOffset(days=1))} al {formatta_data(fine_ultimo_periodo)}: {formatta_numero(int(somma_ultimo_periodo))} utenti
+                - **{'Incremento' if percentuale_incremento > 0 else 'Decremento'} percentuale:** {abs(percentuale_incremento):.2f}%
             """
-            1. **Esportazione dei dati:**
-               - Accedi a Looker Studio.
-               - Vai al report per l'esportazione dei dati [cliccando qui](https://lookerstudio.google.com/reporting/12aaee27-8de8-4a87-a62e-deb8a8c4d8f0).
-               - Clicca con il tasto destro sulla tabella e poi su "Esporta".
-               - Esporta i dati nel formato _Google Fogli_.
-    
-            2. **Pulizia dei dati:**
-               - Si dovrebbe essere aperto automaticamente in Google Fogli.
-               - Rinomina le colonne: quella con le date deve essere rinominata in `Date` e la colonna con i volumi di traffico in `Organic Traffic`.
-    
-                _Qui puoi trovare un [esempio](https://drive.google.com/file/d/1v4ZpiG8Kijwn1uRm02S1yMRQkWH1G4ov/view?usp=sharing) di come dovrebbe apparire._
-    
-            3. **Caricamento del file:**
-               - Utilizza il pulsante di upload per caricare il tuo file CSV pulito.
-            """
-            )
-    
-        st.markdown ('---')
-
-
-        # Caricamento del file CSV
-        uploaded_file = st.file_uploader("2_ Carica il file CSV del traffico", type="csv")
-        if uploaded_file is not None and origine_dati == 'Google Analytics':
-            traffic = pd.read_csv(uploaded_file)
-            if 'Date' not in traffic.columns:
-                st.error("Assicurati che il file CSV abbia la colonna 'Date' nel formato 'YYYY-MM-DD'.")
+            
+            # Visualizzazione del messaggio con st.success o st.error in base all'incremento o decremento
+            if percentuale_incremento > 0:
+                st.success(messaggio)
             else:
-                traffic.rename(columns={'Date': 'ds', 'Organic Traffic': 'y'}, inplace=True)
-                traffic['ds'] = pd.to_datetime(traffic['ds'])
-    
-            # Verifica delle colonne
-            if not {"ds", "y"}.issubset(traffic.columns):
-                st.error("Assicurati che il DataFrame abbia le colonne 'ds' per la data e 'y' per la variabile target.")
-            else:
-                updates = pd.DataFrame({
-                    'holiday': 'Google Update',
-                    'ds': pd.to_datetime(['2015-07-17', '2016-01-08',
-                                          '2016-09-27', '2017-03-08', '2017-07-09', '2018-03-08', '2018-04-17',
-                                          '2018-08-01', '2019-03-12', '2019-06-03', '2019-09-24', '2019-10-25',
-                                          '2019-12-09', '2020-01-13', '2020-05-04', '2020-12-03', '2021-06-02',
-                                          '2021-07-01', '2021-11-17', '2022-05-25', '2023-09-15', '2023-10-05',
-                                          '2023-11-02', '2023-11-08', '2024-03-05']),
-                    'lower_window': 0,
-                    'upper_window': 1,
-                })
-
-                m = Prophet(holidays=updates)
-                m.fit(traffic)
-                future = m.make_future_dataframe(periods=365)
-                forecast = m.predict(future)
-
-
-                # Mappatura dei mesi in italiano
-                mesi_italiani = {
-                    1: 'gennaio', 2: 'febbraio', 3: 'marzo', 4: 'aprile', 5: 'maggio', 6: 'giugno',
-                    7: 'luglio', 8: 'agosto', 9: 'settembre', 10: 'ottobre', 11: 'novembre', 12: 'dicembre'
-                }
-            
-                # Funzione per formattare le date in modo leggibile in italiano
-                def formatta_data(data):
-                    giorno = data.day
-                    mese = mesi_italiani[data.month]
-                    anno = data.year
-                    return f"{giorno} {mese} {anno}"
-            
-                # Funzione per formattare i numeri con i separatori delle migliaia
-                def formatta_numero(numero):
-                    return f"{numero:,}".replace(",", ".")
-            
-                # Calcolo delle date
-                fine_ultimo_periodo = forecast['ds'].max()
-                inizio_ultimo_periodo = fine_ultimo_periodo - DateOffset(days=365)
-                inizio_periodo_precedente = inizio_ultimo_periodo - DateOffset(days=365)
-            
-                # Filtraggio del DataFrame per i due periodi e calcolo delle somme
-                somma_ultimo_periodo = forecast[(forecast['ds'] > inizio_ultimo_periodo) & (forecast['ds'] <= fine_ultimo_periodo)]['yhat'].sum()
-                somma_periodo_precedente = forecast[(forecast['ds'] > inizio_periodo_precedente) & (forecast['ds'] <= inizio_ultimo_periodo)]['yhat'].sum()
-            
-                incremento = somma_ultimo_periodo - somma_periodo_precedente
-                percentuale_incremento = (incremento / somma_periodo_precedente) * 100
-            
-                # Costruzione del messaggio da visualizzare
-                messaggio = f"""
-                    **Confronto del traffico tra i periodi:**
-                    - Dal {formatta_data(inizio_periodo_precedente + DateOffset(days=1))} al {formatta_data(inizio_ultimo_periodo)}: {formatta_numero(int(somma_periodo_precedente))} utenti
-                    - Dal {formatta_data(inizio_ultimo_periodo + DateOffset(days=1))} al {formatta_data(fine_ultimo_periodo)}: {formatta_numero(int(somma_ultimo_periodo))} utenti
-                    - **{'Incremento' if percentuale_incremento > 0 else 'Decremento'} percentuale:** {abs(percentuale_incremento):.2f}%
-                """
-            
-                # Visualizzazione del messaggio con st.success o st.error in base all'incremento o decremento
-                if percentuale_incremento > 0:
-                    st.success(messaggio)
-                else:
-                    st.error(messaggio)
+                st.error(messaggio)
 
 
             
-                ## st.write("Anteprima dei dati caricati:")
-                ## st.write(traffic.head())
+            ## st.write("Anteprima dei dati caricati:")
+            ## st.write(traffic.head())
 
-                st.subheader("Previsioni del traffico futuro")
-                fig1 = plot_plotly(m, forecast)
-                st.plotly_chart(fig1)
+            st.subheader("Previsioni del traffico futuro")
+            fig1 = plot_plotly(m, forecast)
+            st.plotly_chart(fig1)
             
-                ## st.subheader("Componenti del forecast")
-                ## fig2 = plot_components_plotly(m, forecast)
-                ## st.plotly_chart(fig2)
+            ## st.subheader("Componenti del forecast")
+            ## fig2 = plot_components_plotly(m, forecast)
+            ## st.plotly_chart(fig2)
             
-                st.download_button(label="Scarica le previsioni in formato CSV",
-                                   data=forecast.to_csv().encode('utf-8'),
-                                   file_name='previsioni_traffico_futuro.csv',
-                                   mime='text/csv')
+            st.download_button(label="Scarica le previsioni in formato CSV",
+                               data=forecast.to_csv().encode('utf-8'),
+                               file_name='previsioni_traffico_futuro.csv',
+                               mime='text/csv')
