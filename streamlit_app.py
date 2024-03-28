@@ -17,7 +17,7 @@ numero_formattato = formatta_numero(1234567)
 print(numero_formattato)  # Output: 1.234.567
 
 # Crea una riga con 3 colonne
-col1, col2, col3 = st.columns([1, 8, 1])
+col1, col2, col3 = st.columns([1, 9, 1])
 
 # Colonna per l'immagine (a sinistra)
 with col1:
