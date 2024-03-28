@@ -16,7 +16,22 @@ def formatta_numero(numero):
 numero_formattato = formatta_numero(1234567)
 print(numero_formattato)  # Output: 1.234.567
 
-st.title('Previsione del Traffico Futuro')
+# Crea una riga con 3 colonne
+col1, col2, col3 = st.columns([1, 6, 1])
+
+# Colonna per l'immagine (a sinistra)
+with col1:
+    # Assicurati di avere un'immagine nel percorso specificato o passa un URL diretto
+    st.image("percorso_alla_tua_immagine.jpg", width=100)
+
+# Colonna per il titolo e il testo "by NUR® Digital Marketing" (al centro)
+with col2:
+    st.title('Previsione del Traffico Futuro')
+    st.markdown('#### by NUR® Digital Marketing')
+
+# Colonna vuota (a destra) per spaziatura - opzionale
+with col3:
+    st.write("")
 
 st.markdown("""
 ## Introduzione
