@@ -113,7 +113,7 @@ if uploaded_file is not None:
             st.error(messaggio)
 
         st.subheader("Previsioni del traffico futuro")
-        fig1 = plot_plotly(forecast)
+        fig1 = plot_plotly(m, forecast)
         st.plotly_chart(fig1)
 
 
