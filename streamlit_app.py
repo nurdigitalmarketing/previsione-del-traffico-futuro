@@ -7,6 +7,31 @@ from datetime import datetime, timedelta
 from pandas.tseries.offsets import DateOffset
 import numpy as np
 
+import streamlit as st
+
+# Includi il font Montserrat tramite Google Fonts e applica il font tramite CSS
+st.markdown("""
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap');
+
+/* Applica il font Montserrat a tutti gli elementi dell'app */
+html, body, [class*="st-"] {
+    font-family: 'Montserrat', sans-serif;
+}
+
+/* Stile personalizzato per il titolo */
+.title {
+    font-weight: 700;
+}
+
+/* Stile personalizzato per sottotitoli o testo specifico */
+.subtitle {
+    font-weight: 400;
+}
+</style>
+""", unsafe_allow_html=True)
+
+
 def formatta_numero(numero):
     """Formatta il numero con il punto come separatore delle migliaia."""
     num_str = f"{numero:,}"  # Formatta il numero con la virgola come separatore delle migliaia
