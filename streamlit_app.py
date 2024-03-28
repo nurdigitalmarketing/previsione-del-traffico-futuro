@@ -23,40 +23,40 @@ numero_formattato = formatta_numero(1234567)
 print(numero_formattato)  # Output: 1.234.567
 
 
-st.title('Previsione del Traffico Futuro')
-
-st.markdown(
-"""
-## Introduzione
-
-Questo strumento è stato sviluppato per fornire previsioni sul traffico futuro basandosi sull'export dei dati degli utenti da _Google Analytics_. Attraverso l'utilizzo di modelli di previsione avanzati, facilita la comprensione delle tendenze future basate sui dati storici.
-
-## Funzionamento
-
-Per garantire previsioni accurate, segui i passaggi dettagliati relativi all'origine dei tuoi dati. Ecco come preparare i dati esportati da Google Analytics.
-""")
-
-with st.expander("Istruzioni"):
+    st.title('Previsione del Traffico Futuro')
+    
     st.markdown(
     """
-    1. **Esportazione dei dati:**
-       - Accedi a Looker Studio.
-       - Vai al report per l'esportazione dei dati [cliccando qui](https://lookerstudio.google.com/reporting/12aaee27-8de8-4a87-a62e-deb8a8c4d8f0).
-       - Clicca con il tasto destro sulla tabella e poi su "Esporta".
-       - Esporta i dati nel formato _Google Fogli_.
-
-    2. **Pulizia dei dati:**
-       - Si dovrebbe essere aperto automaticamente in Google Fogli.
-       - Rinomina le colonne: quella con le date deve essere rinominata in `Date` e la colonna con i volumi di traffico in `Organic Traffic`.
-
-        _Qui puoi trovare un [esempio](https://drive.google.com/file/d/1v4ZpiG8Kijwn1uRm02S1yMRQkWH1G4ov/view?usp=sharing) di come dovrebbe apparire._
-
-    3. **Caricamento del file:**
-       - Utilizza il pulsante di upload per caricare il tuo file CSV pulito.
-    """
-    )
-
-st.markdown ('---')
+    ## Introduzione
+    
+    Questo strumento è stato sviluppato per fornire previsioni sul traffico futuro basandosi sull'export dei dati degli utenti da _Google Analytics_. Attraverso l'utilizzo di modelli di previsione avanzati, facilita la comprensione delle tendenze future basate sui dati storici.
+    
+    ## Funzionamento
+    
+    Per garantire previsioni accurate, segui i passaggi dettagliati relativi all'origine dei tuoi dati. Ecco come preparare i dati esportati da Google Analytics.
+    """)
+    
+    with st.expander("Istruzioni"):
+        st.markdown(
+        """
+        1. **Esportazione dei dati:**
+           - Accedi a Looker Studio.
+           - Vai al report per l'esportazione dei dati [cliccando qui](https://lookerstudio.google.com/reporting/12aaee27-8de8-4a87-a62e-deb8a8c4d8f0).
+           - Clicca con il tasto destro sulla tabella e poi su "Esporta".
+           - Esporta i dati nel formato _Google Fogli_.
+    
+        2. **Pulizia dei dati:**
+           - Si dovrebbe essere aperto automaticamente in Google Fogli.
+           - Rinomina le colonne: quella con le date deve essere rinominata in `Date` e la colonna con i volumi di traffico in `Organic Traffic`.
+    
+            _Qui puoi trovare un [esempio](https://drive.google.com/file/d/1v4ZpiG8Kijwn1uRm02S1yMRQkWH1G4ov/view?usp=sharing) di come dovrebbe apparire._
+    
+        3. **Caricamento del file:**
+           - Utilizza il pulsante di upload per caricare il tuo file CSV pulito.
+        """
+        )
+    
+    st.markdown ('---')
 
 
     # Caricamento del file CSV
