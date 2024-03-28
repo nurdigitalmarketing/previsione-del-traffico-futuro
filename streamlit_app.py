@@ -131,7 +131,7 @@ if uploaded_file is not None and origine_dati == 'Ahrefs':
                                   '2023-11-02', '2023-11-08', '2024-03-05']),
             'lower_window': 0,
             'upper_window': 1,
-        })
+    })
 
             m = Prophet(holidays=updates)
             m.fit(traffic)
