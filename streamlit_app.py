@@ -97,7 +97,7 @@ if uploaded_file is not None:
 
         incremento = somma_ultimo_periodo - somma_periodo_precedente
         percentuale_incremento = (incremento / somma_periodo_precedente) * 100
-
+        
         # Messaggio di confronto
         messaggio = f"""
             **Confronto del traffico tra i periodi:**
