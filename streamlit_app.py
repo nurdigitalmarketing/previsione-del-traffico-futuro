@@ -78,6 +78,8 @@ if uploaded_file is not None:
         future = m.make_future_dataframe(periods=365)
         forecast = m.predict(future)
 
+        forecast.rename(columns={'yhat': 'Utenti'}, inplace=True)
+
         # Mappatura dei mesi in italiano e funzione per formattare le date
         mesi_italiani = {1: 'gennaio', 2: 'febbraio', 3: 'marzo', 4: 'aprile', 5: 'maggio', 6: 'giugno',
                          7: 'luglio', 8: 'agosto', 9: 'settembre', 10: 'ottobre', 11: 'novembre', 12: 'dicembre'}
