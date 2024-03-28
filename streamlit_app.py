@@ -98,12 +98,12 @@ if uploaded_file is not None:
         incremento = somma_ultimo_periodo - somma_periodo_precedente
         percentuale_incremento = (incremento / somma_periodo_precedente) * 100
         
-        # Messaggio di confronto
+        # Messaggio di confronto con il segno "-" per i decrementi
         messaggio = f"""
             **Confronto del traffico tra i periodi:**
             - Dal {formatta_data(inizio_periodo_precedente + DateOffset(days=1))} al {formatta_data(inizio_ultimo_periodo)}: {formatta_numero(int(somma_periodo_precedente))} utenti
             - Dal {formatta_data(inizio_ultimo_periodo + DateOffset(days=1))} al {formatta_data(fine_ultimo_periodo)}: {formatta_numero(int(somma_ultimo_periodo))} utenti
-            - **{'Incremento' if percentuale_incremento > 0 else 'Decremento'} percentuale:** {abs(percentuale_incremento):.2f}%
+            - **{'Incremento' if percentuale_incremento > 0 else 'Decremento'} percentuale:** {"-" if percentuale_incremento < 0 else ""}{abs(percentuale_incremento):.2f}%
         """
         
         if percentuale_incremento > 0:
