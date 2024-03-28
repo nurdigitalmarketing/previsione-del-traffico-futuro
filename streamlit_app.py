@@ -112,21 +112,9 @@ if uploaded_file is not None:
         else:
             st.error(messaggio)
 
-        # Inizializzazione del grafico Plotly
-        fig = go.Figure()
-        
-        # Aggiunta della linea di previsione principale
-        fig.add_trace(go.Scatter(x=forecast['ds'], y=forecast['Utenti'], mode='lines', name='Previsione Utenti'))
-        
-        # Aggiunta dell'area di incertezza
-        fig.add_trace(go.Scatter(x=forecast['ds'], y=forecast['yhat_upper'], fill=None, mode='lines', line=dict(color='lightgrey'), showlegend=False))
-        fig.add_trace(go.Scatter(x=forecast['ds'], y=forecast['yhat_lower'], fill='tonexty', mode='lines', line=dict(color='lightgrey'), showlegend=False))
-        
-        # Impostazioni del layout del grafico
-        fig.update_layout(title='Previsione Traffico Futuro', xaxis_title='Data', yaxis_title='Utenti')
-        
-        # Visualizzazione del grafico in Streamlit
-        st.plotly_chart(fig)
+        st.subheader("Previsioni del traffico futuro")
+        fig1 = plot_plotly(m, forecast)
+        st.plotly_chart(fig1)
 
 
         st.download_button(label="Scarica le previsioni in formato CSV",
