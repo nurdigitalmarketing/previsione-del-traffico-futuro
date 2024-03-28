@@ -114,7 +114,7 @@ if uploaded_file is not None:
 
         st.subheader("Previsioni del traffico futuro")
         fig1 = plot_plotly(m, forecast)
-        st.plotly_chart(fig1)
+       # st.plotly_chart(fig1)
 
 
         st.download_button(label="Scarica le previsioni in formato CSV",
