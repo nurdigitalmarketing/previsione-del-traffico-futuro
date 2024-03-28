@@ -97,6 +97,12 @@ if uploaded_file is not None:
 
         incremento = somma_ultimo_periodo - somma_periodo_precedente
         percentuale_incremento = (incremento / somma_periodo_precedente) * 100
+        
+        # Aggiustamento per mostrare il decremento come valore negativo
+        if incremento < 0:
+            percentuale_incremento = -abs(percentuale_incremento)
+        else:
+            percentuale_incremento = abs(percentuale_incremento)
 
         # Messaggio di confronto
         messaggio = f"""
