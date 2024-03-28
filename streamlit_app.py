@@ -40,7 +40,7 @@ with st.expander("Istruzioni"):
        - Si dovrebbe essere aperto automaticamente in Google Fogli.
        - Rinomina le colonne: quella con le date deve essere rinominata in `Date` e la colonna con i volumi di traffico in `Organic Traffic`.
 
-        _Qui puoi trovare un [esempio](https://drive.google.com/file/d/1v4ZpiG8Kijwn1uRm02S1yMRQkWH1G4ov/view?usp=sharing) di come dovrebbe apparire._
+        _Qui puoi trovare un [esempio](https://drive.google.com/file/d/1v4cqG_v8b85t9A7OImsAINKGUCh_eRey/view?usp=drive_link) di come dovrebbe apparire._
 
     3. **Caricamento del file:**
        - Utilizza il pulsante di upload per caricare il tuo file CSV pulito.
