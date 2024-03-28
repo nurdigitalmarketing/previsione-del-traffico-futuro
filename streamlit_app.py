@@ -112,7 +112,6 @@ if uploaded_file is not None:
         else:
             st.error(messaggio)
 
-import plotly.graph_objs as go
 
         # Creazione di un grafico Plotly basato sui dati di previsione
         fig = go.Figure()
