@@ -1,6 +1,7 @@
 import streamlit as st
 import pandas as pd
 from prophet import Prophet
+import plotly.graph_objs as go
 from prophet.plot import plot_plotly, plot_components_plotly
 from datetime import datetime, timedelta
 from pandas.tseries.offsets import DateOffset
@@ -78,8 +79,6 @@ if uploaded_file is not None:
         future = m.make_future_dataframe(periods=365)
         forecast = m.predict(future)
 
-        forecast.rename(columns={'y': 'Utenti'}, inplace=True)
-
         # Mappatura dei mesi in italiano e funzione per formattare le date
         mesi_italiani = {1: 'gennaio', 2: 'febbraio', 3: 'marzo', 4: 'aprile', 5: 'maggio', 6: 'giugno',
                          7: 'luglio', 8: 'agosto', 9: 'settembre', 10: 'ottobre', 11: 'novembre', 12: 'dicembre'}
@@ -100,7 +99,7 @@ if uploaded_file is not None:
         incremento = somma_ultimo_periodo - somma_periodo_precedente
         percentuale_incremento = (incremento / somma_periodo_precedente) * 100
         
-        # Messaggio di confronto con il segno "-" per i decrementi
+        # Messaggio di confronto
         messaggio = f"""
             **Confronto del traffico tra i periodi:**
             - Dal {formatta_data(inizio_periodo_precedente + DateOffset(days=1))} al {formatta_data(inizio_ultimo_periodo)}: {formatta_numero(int(somma_periodo_precedente))} utenti
@@ -113,9 +112,15 @@ if uploaded_file is not None:
         else:
             st.error(messaggio)
 
-        st.subheader("Previsioni del traffico futuro")
-        fig1 = plot_plotly(m, forecast)
-        st.plotly_chart(fig1)
+import plotly.graph_objs as go
+
+        # Creazione di un grafico Plotly basato sui dati di previsione
+        fig = go.Figure()
+        fig.add_trace(go.Scatter(x=forecast['ds'], y=forecast['yhat'], mode='lines', name='Utenti'))
+        fig.update_layout(title='Previsione Traffico Futuro', xaxis_title='Data', yaxis_title='Utenti')
+        
+        # Visualizzazione del grafico in Streamlit
+        st.plotly_chart(fig)
 
         st.download_button(label="Scarica le previsioni in formato CSV",
                            data=forecast.to_csv().encode('utf-8'),
