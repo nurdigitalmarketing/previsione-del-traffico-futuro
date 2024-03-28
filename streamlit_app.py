@@ -95,27 +95,23 @@ if uploaded_file is not None:
         somma_ultimo_periodo = forecast[(forecast['ds'] > inizio_ultimo_periodo) & (forecast['ds'] <= fine_ultimo_periodo)]['yhat'].sum()
         somma_periodo_precedente = forecast[(forecast['ds'] > inizio_periodo_precedente) & (forecast['ds'] <= inizio_ultimo_periodo)]['yhat'].sum()
 
+        # Calcolo dell'incremento o decremento e della percentuale di cambiamento
         incremento = somma_ultimo_periodo - somma_periodo_precedente
         percentuale_incremento = (incremento / somma_periodo_precedente) * 100
         
-        # Aggiustamento per mostrare il decremento come valore negativo
-        if incremento < 0:
-            percentuale_incremento = -abs(percentuale_incremento)
-        else:
-            percentuale_incremento = abs(percentuale_incremento)
-
-        # Messaggio di confronto
+        # Modifica per assicurare che il decremento sia rappresentato con un segno negativo nel messaggio
         messaggio = f"""
             **Confronto del traffico tra i periodi:**
             - Dal {formatta_data(inizio_periodo_precedente + DateOffset(days=1))} al {formatta_data(inizio_ultimo_periodo)}: {formatta_numero(int(somma_periodo_precedente))} utenti
             - Dal {formatta_data(inizio_ultimo_periodo + DateOffset(days=1))} al {formatta_data(fine_ultimo_periodo)}: {formatta_numero(int(somma_ultimo_periodo))} utenti
-            - **{'Incremento' if percentuale_incremento > 0 else 'Decremento'} percentuale:** {abs(percentuale_incremento):.2f}%
+            - **{'Incremento' if incremento > 0 else 'Decremento'} percentuale:** {percentuale_incremento:.2f}%
         """
         
         if percentuale_incremento > 0:
             st.success(messaggio)
         else:
             st.error(messaggio)
+
 
         st.subheader("Previsioni del traffico futuro")
         fig1 = plot_plotly(m, forecast)
