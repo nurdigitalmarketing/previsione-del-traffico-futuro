@@ -48,7 +48,7 @@ with st.expander("Istruzioni"):
 st.markdown('---')
 
 # Caricamento del file CSV
-uploaded_file = st.file_uploader("2_ Carica il file CSV del traffico", type="csv")
+uploaded_file = st.file_uploader("Carica il file CSV del traffico", type="csv")
 if uploaded_file is not None:
     traffic = pd.read_csv(uploaded_file)
     if 'Date' not in traffic.columns:
