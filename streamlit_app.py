@@ -22,12 +22,12 @@ col1, col2, col3 = st.columns([1, 6, 1])
 # Colonna per l'immagine (a sinistra)
 with col1:
     # Assicurati di avere un'immagine nel percorso specificato o passa un URL diretto
-    st.image("https://raw.githubusercontent.com/nurdigitalmarketing/previsione-del-traffico-futuro/9cdbf5d19d9132129474936c137bc8de1a67bd35/Nur-simbolo-1080x1080.png", width=100)
+    st.image("https://raw.githubusercontent.com/nurdigitalmarketing/previsione-del-traffico-futuro/9cdbf5d19d9132129474936c137bc8de1a67bd35/Nur-simbolo-1080x1080.png", width=30)
 
 # Colonna per il titolo e il testo "by NUR® Digital Marketing" (al centro)
 with col2:
     st.title('Previsione del Traffico Futuro')
-    st.markdown('#### by NUR® Digital Marketing')
+    st.markdown('###### by NUR® Digital Marketing')
 
 # Colonna vuota (a destra) per spaziatura - opzionale
 with col3:
