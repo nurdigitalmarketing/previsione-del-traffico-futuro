@@ -114,11 +114,13 @@ def compare_traffic(forecast):
     else:
         st.error(messaggio)
 
-# Esempio di come utilizzare le funzioni definite sopra (commentato per evitare l'esecuzione qui)
-# Esempio di come utilizzare le funzioni definite sopra
-build_ui()
-# Aggiunta di un pulsante per caricare e analizzare il file CSV
 if st.button("Carica e Analizza"):
     uploaded_file = st.file_uploader("Carica il file CSV del traffico", type="csv")
     if uploaded_file is not None:
-        forecast_traffic(uploaded_file)
+        st.success("File caricato con successo!")
+        try:
+            forecast_traffic(uploaded_file)
+        except Exception as e:
+            st.error(f"Si è verificato un errore durante l'elaborazione: {e}")
+            # Per il debugging, considera di stampare l'errore su console o un log
+
