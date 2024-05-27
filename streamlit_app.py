@@ -119,7 +119,7 @@ if uploaded_file_cliente is not None:
             - **{'Incremento' if percentuale_incremento_cliente > 0 else 'Decremento'} percentuale:** {"-" if percentuale_incremento_cliente < 0 else ""}{abs(percentuale_incremento_cliente):.2f}%
         """
         
-        st.markdown(f'<div style="background-color: #E6F7FF; padding: 10px; border-radius: 5px;">{messaggio_cliente}</div>', unsafe_allow_html=True)
+        st.info(messaggio_cliente)
         
         st.subheader("Previsioni del traffico futuro del sito cliente")
         fig1 = plot_plotly(modello_cliente, forecast_cliente)
@@ -140,10 +140,6 @@ if competitors:
                 forecast_competitor = modello_competitor.predict(future_competitor)
                 
                 all_forecasts[uploaded_file.name] = forecast_competitor
-                
-                st.subheader(f"Previsioni del traffico futuro per il competitor: {uploaded_file.name}")
-                fig2 = plot_plotly(modello_competitor, forecast_competitor)
-                st.plotly_chart(fig2)
         
         # Confronto tra il sito cliente e i competitor
         st.header("Confronto tra sito cliente e competitor")
@@ -159,7 +155,7 @@ if competitors:
                 - **{'Incremento' if percentuale_incremento_competitor > 0 else 'Decremento'} percentuale:** {"-" if percentuale_incremento_competitor < 0 else ""}{abs(percentuale_incremento_competitor):.2f}%
             """
             
-            st.markdown(f'<div style="background-color: #E6F7FF; padding: 10px; border-radius: 5px;">{messaggio_competitor}</div>', unsafe_allow_html=True)
+            st.info(messaggio_competitor)
             
             # Confronto delle percentuali di crescita
             percentuale_confronto = percentuale_incremento_cliente - percentuale_incremento_competitor
@@ -171,7 +167,7 @@ if competitors:
                 - **Differenza percentuale:** {percentuale_confronto:.2f}%
             """
             
-            st.markdown(f'<div style="background-color: #E6F7FF; padding: 10px; border-radius: 5px;">{messaggio_confronto}</div>', unsafe_allow_html=True)
+            st.info(messaggio_confronto)
         
         # Grafico con le linee sovrapposte
         fig = go.Figure()
