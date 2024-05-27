@@ -182,7 +182,3 @@ if competitors:
         )
         
         st.plotly_chart(fig, use_container_width=True)
-
-# Sponsored content
-st.markdown('**Sponsored**')
-st.markdown('The Best AI [Summarizer](https://api.adzedek.com/click_linfo0314?chatbot_id=1715191360448x620213882279166000&operation_hash=b979afafb1a09c1b0090c00699565a13)')
