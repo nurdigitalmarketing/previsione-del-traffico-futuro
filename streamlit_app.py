@@ -5,6 +5,7 @@ from prophet.plot import plot_plotly
 from datetime import datetime, timedelta
 from pandas.tseries.offsets import DateOffset
 import numpy as np
+import plotly.graph_objects as go
 
 # Funzione per formattare i numeri
 def formatta_numero(numero):
@@ -108,30 +109,6 @@ if uploaded_file_cliente is not None:
         future_cliente = modello_cliente.make_future_dataframe(periods=365)
         forecast_cliente = modello_cliente.predict(future_cliente)
         
-        st.subheader("Previsioni del traffico futuro del sito cliente")
-        fig1 = plot_plotly(modello_cliente, forecast_cliente)
-        st.plotly_chart(fig1)
-
-# Chiedi se ci sono competitor
-competitors = st.checkbox("Vuoi aggiungere competitor?")
-
-if competitors:
-    uploaded_files_competitors = st.file_uploader("Carica i file CSV dei competitor", type="csv", accept_multiple_files=True)
-    if uploaded_files_competitors:
-        for uploaded_file in uploaded_files_competitors:
-            traffic_competitor = carica_dati(uploaded_file)
-            if traffic_competitor is not None:
-                modello_competitor = crea_modello(traffic_competitor)
-                future_competitor = modello_competitor.make_future_dataframe(periods=365)
-                forecast_competitor = modello_competitor.predict(future_competitor)
-                
-                st.subheader(f"Previsioni del traffico futuro per il competitor: {uploaded_file.name}")
-                fig2 = plot_plotly(modello_competitor, forecast_competitor)
-                st.plotly_chart(fig2)
-        
-        # Confronto tra il sito cliente e i competitor
-        st.header("Confronto tra sito cliente e competitor")
-        
         # Calcolo confronto per il sito cliente
         inizio_periodo_precedente_cliente, inizio_ultimo_periodo_cliente, fine_ultimo_periodo_cliente, somma_periodo_precedente_cliente, somma_ultimo_periodo_cliente, percentuale_incremento_cliente = calcola_confronto(forecast_cliente)
         
@@ -142,9 +119,19 @@ if competitors:
             - **{'Incremento' if percentuale_incremento_cliente > 0 else 'Decremento'} percentuale:** {"-" if percentuale_incremento_cliente < 0 else ""}{abs(percentuale_incremento_cliente):.2f}%
         """
         
-        st.write(messaggio_cliente)
+        st.markdown(f'<div style="background-color: #E6F7FF; padding: 10px; border-radius: 5px;">{messaggio_cliente}</div>', unsafe_allow_html=True)
         
-        # Confronto per ciascun competitor
+        st.subheader("Previsioni del traffico futuro del sito cliente")
+        fig1 = plot_plotly(modello_cliente, forecast_cliente)
+        st.plotly_chart(fig1)
+
+# Chiedi se ci sono competitor
+competitors = st.checkbox("Vuoi aggiungere competitor?")
+
+if competitors:
+    uploaded_files_competitors = st.file_uploader("Carica i file CSV dei competitor", type="csv", accept_multiple_files=True)
+    if uploaded_files_competitors:
+        all_forecasts = {}
         for uploaded_file in uploaded_files_competitors:
             traffic_competitor = carica_dati(uploaded_file)
             if traffic_competitor is not None:
@@ -152,28 +139,56 @@ if competitors:
                 future_competitor = modello_competitor.make_future_dataframe(periods=365)
                 forecast_competitor = modello_competitor.predict(future_competitor)
                 
-                inizio_periodo_precedente_competitor, inizio_ultimo_periodo_competitor, fine_ultimo_periodo_competitor, somma_periodo_precedente_competitor, somma_ultimo_periodo_competitor, percentuale_incremento_competitor = calcola_confronto(forecast_competitor)
+                all_forecasts[uploaded_file.name] = forecast_competitor
                 
-                messaggio_competitor = f"""
-                    **Confronto del traffico tra i periodi (competitor {uploaded_file.name}):**
-                    - Dal {formatta_data(inizio_periodo_precedente_competitor + DateOffset(days=1))} al {formatta_data(inizio_ultimo_periodo_competitor)}: {formatta_numero(int(somma_periodo_precedente_competitor))} utenti
-                    - Dal {formatta_data(inizio_ultimo_periodo_competitor + DateOffset(days=1))} al {formatta_data(fine_ultimo_periodo_competitor)}: {formatta_numero(int(somma_ultimo_periodo_competitor))} utenti
-                    - **{'Incremento' if percentuale_incremento_competitor > 0 else 'Decremento'} percentuale:** {"-" if percentuale_incremento_competitor < 0 else ""}{abs(percentuale_incremento_competitor):.2f}%
-                """
-                
-                st.write(messaggio_competitor)
-                
-                # Confronto delle percentuali di crescita
-                percentuale_confronto = percentuale_incremento_cliente - percentuale_incremento_competitor
-                
-                messaggio_confronto = f"""
-                    **Confronto della crescita percentuale tra sito cliente e competitor {uploaded_file.name}:**
-                    - Sito cliente: {percentuale_incremento_cliente:.2f}%
-                    - Competitor {uploaded_file.name}: {percentuale_incremento_competitor:.2f}%
-                    - **Differenza percentuale:** {percentuale_confronto:.2f}%
-                """
-                
-                st.write(messaggio_confronto)
+                st.subheader(f"Previsioni del traffico futuro per il competitor: {uploaded_file.name}")
+                fig2 = plot_plotly(modello_competitor, forecast_competitor)
+                st.plotly_chart(fig2)
+        
+        # Confronto tra il sito cliente e i competitor
+        st.header("Confronto tra sito cliente e competitor")
+        
+        # Confronto per ciascun competitor
+        for competitor_name, forecast_competitor in all_forecasts.items():
+            inizio_periodo_precedente_competitor, inizio_ultimo_periodo_competitor, fine_ultimo_periodo_competitor, somma_periodo_precedente_competitor, somma_ultimo_periodo_competitor, percentuale_incremento_competitor = calcola_confronto(forecast_competitor)
+            
+            messaggio_competitor = f"""
+                **Confronto del traffico tra i periodi (competitor {competitor_name}):**
+                - Dal {formatta_data(inizio_periodo_precedente_competitor + DateOffset(days=1))} al {formatta_data(inizio_ultimo_periodo_competitor)}: {formatta_numero(int(somma_periodo_precedente_competitor))} utenti
+                - Dal {formatta_data(inizio_ultimo_periodo_competitor + DateOffset(days=1))} al {formatta_data(fine_ultimo_periodo_competitor)}: {formatta_numero(int(somma_ultimo_periodo_competitor))} utenti
+                - **{'Incremento' if percentuale_incremento_competitor > 0 else 'Decremento'} percentuale:** {"-" if percentuale_incremento_competitor < 0 else ""}{abs(percentuale_incremento_competitor):.2f}%
+            """
+            
+            st.markdown(f'<div style="background-color: #E6F7FF; padding: 10px; border-radius: 5px;">{messaggio_competitor}</div>', unsafe_allow_html=True)
+            
+            # Confronto delle percentuali di crescita
+            percentuale_confronto = percentuale_incremento_cliente - percentuale_incremento_competitor
+            
+            messaggio_confronto = f"""
+                **Confronto della crescita percentuale tra sito cliente e competitor {competitor_name}:**
+                - Sito cliente: {percentuale_incremento_cliente:.2f}%
+                - Competitor {competitor_name}: {percentuale_incremento_competitor:.2f}%
+                - **Differenza percentuale:** {percentuale_confronto:.2f}%
+            """
+            
+            st.markdown(f'<div style="background-color: #E6F7FF; padding: 10px; border-radius: 5px;">{messaggio_confronto}</div>', unsafe_allow_html=True)
+        
+        # Grafico con le linee sovrapposte
+        fig = go.Figure()
+        
+        # Aggiungi i dati del cliente
+        fig.add_trace(go.Scatter(x=forecast_cliente['ds'], y=forecast_cliente['yhat'], mode='lines', name='Cliente'))
+        
+        # Aggiungi i dati dei competitor
+        for competitor_name, forecast_competitor in all_forecasts.items():
+            fig.add_trace(go.Scatter(x=forecast_competitor['ds'], y=forecast_competitor['yhat'], mode='lines', name=f'Competitor: {competitor_name}'))
+        
+        fig.update_layout(title='Previsioni del traffico futuro (Cliente vs Competitor)',
+                          xaxis_title='Data',
+                          yaxis_title='Traffico previsto',
+                          template='plotly_white')
+        
+        st.plotly_chart(fig)
 
 # Sponsored content
 st.markdown('**Sponsored**')
