@@ -182,7 +182,10 @@ if competitors:
         fig.update_layout(title='Previsioni del traffico futuro (Cliente vs Competitor)',
                           xaxis_title='Data',
                           yaxis_title='Traffico previsto',
-                          template='plotly_white')
+                          template='plotly_white',
+                          width=1000,  # Imposta la larghezza del grafico
+                          height=600   # Imposta l'altezza del grafico
+                         )
         
         st.plotly_chart(fig)
 
