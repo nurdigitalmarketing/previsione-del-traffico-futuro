@@ -2,10 +2,11 @@ import streamlit as st
 import pandas as pd
 from prophet import Prophet
 from prophet.plot import plot_plotly
-from datetime import datetime, timedelta
+from datetime import datetime
 from pandas.tseries.offsets import DateOffset
 import numpy as np
 import plotly.graph_objects as go
+import os
 
 # Funzione per formattare i numeri
 def formatta_numero(numero):
@@ -66,6 +67,12 @@ def formatta_data(data):
     mese = mesi_italiani[data.month]
     anno = data.year
     return f"{giorno} {mese} {anno}"
+
+# Funzione per estrarre il nome del competitor dal file
+def estrai_nome_competitor(file_path):
+    file_name = os.path.basename(file_path)
+    nome_competitor = file_name.split('-')[0]
+    return nome_competitor
 
 # Visualizzazione dell'immagine e del titolo
 col1, col2 = st.columns([1, 7])
@@ -139,7 +146,8 @@ if competitors:
                 future_competitor = modello_competitor.make_future_dataframe(periods=365)
                 forecast_competitor = modello_competitor.predict(future_competitor)
                 
-                all_forecasts[uploaded_file.name] = forecast_competitor
+                nome_competitor = estrai_nome_competitor(uploaded_file.name)
+                all_forecasts[nome_competitor] = forecast_competitor
         
         # Confronto tra il sito cliente e i competitor
         st.header("Confronto tra sito cliente e competitor")
@@ -183,9 +191,14 @@ if competitors:
                           xaxis_title='Data',
                           yaxis_title='Traffico previsto',
                           template='plotly_white',
-                          width=1000,  # Imposta la larghezza del grafico
-                          height=600   # Imposta l'altezza del grafico
-                         )
+                          autosize=True,
+                          width=1000,
+                          height=600,
+                          xaxis=dict(
+                              tickformat='%Y-%m-%d',
+                              dtick="M1",
+                              tickangle=45
+                          ))
         
         st.plotly_chart(fig)
 
