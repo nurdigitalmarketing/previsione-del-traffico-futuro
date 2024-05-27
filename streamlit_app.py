@@ -5,7 +5,6 @@ from prophet.plot import plot_plotly
 from datetime import datetime
 from pandas.tseries.offsets import DateOffset
 import numpy as np
-import plotly.express as px
 import plotly.graph_objects as go
 import os
 
@@ -150,35 +149,8 @@ if competitors:
                 nome_competitor = estrai_nome_competitor(uploaded_file.name)
                 all_forecasts[nome_competitor] = forecast_competitor
         
-        # Confronto tra il sito cliente e i competitor
-        st.header("Confronto tra sito cliente e competitor")
-        
-        # Confronto per ciascun competitor
-        for competitor_name, forecast_competitor in all_forecasts.items():
-            inizio_periodo_precedente_competitor, inizio_ultimo_periodo_competitor, fine_ultimo_periodo_competitor, somma_periodo_precedente_competitor, somma_ultimo_periodo_competitor, percentuale_incremento_competitor = calcola_confronto(forecast_competitor)
-            
-            messaggio_competitor = f"""
-                **Confronto del traffico tra i periodi (competitor {competitor_name}):**
-                - Dal {formatta_data(inizio_periodo_precedente_competitor + DateOffset(days=1))} al {formatta_data(inizio_ultimo_periodo_competitor)}: {formatta_numero(int(somma_periodo_precedente_competitor))} utenti
-                - Dal {formatta_data(inizio_ultimo_periodo_competitor + DateOffset(days=1))} al {formatta_data(fine_ultimo_periodo_competitor)}: {formatta_numero(int(somma_ultimo_periodo_competitor))} utenti
-                - **{'Incremento' if percentuale_incremento_competitor > 0 else 'Decremento'} percentuale:** {"-" if percentuale_incremento_competitor < 0 else ""}{abs(percentuale_incremento_competitor):.2f}%
-            """
-            
-            st.info(messaggio_competitor)
-            
-            # Confronto delle percentuali di crescita
-            percentuale_confronto = percentuale_incremento_cliente - percentuale_incremento_competitor
-            
-            messaggio_confronto = f"""
-                **Confronto della crescita percentuale tra sito cliente e competitor {competitor_name}:**
-                - Sito cliente: {percentuale_incremento_cliente:.2f}%
-                - Competitor {competitor_name}: {percentuale_incremento_competitor:.2f}%
-                - **Differenza percentuale:** {percentuale_confronto:.2f}%
-            """
-            
-            st.info(messaggio_confronto)
-        
         # Grafico con le linee sovrapposte
+        st.subheader("Previsioni del traffico futuro (Cliente vs Competitor)")
         fig = go.Figure()
         
         # Aggiungi i dati del cliente
@@ -188,25 +160,26 @@ if competitors:
         for competitor_name, forecast_competitor in all_forecasts.items():
             fig.add_trace(go.Scatter(x=forecast_competitor['ds'], y=forecast_competitor['yhat'], mode='lines', name=f'Competitor: {competitor_name}'))
         
-        fig.update_layout(title='Previsioni del traffico futuro (Cliente vs Competitor)',
-                          xaxis_title='Data',
-                          yaxis_title='Traffico previsto',
-                          template='plotly_white',
-                          autosize=True,
-                          width=1000,
-                          height=600,
-                          xaxis=dict(
-                              tickformat='%Y-%m-%d',
-                              dtick="M1",
-                              tickangle=45
-                          ),
-                          legend=dict(
-                              orientation="h",
-                              yanchor="bottom",
-                              y=-0.3,
-                              xanchor="center",
-                              x=0.5
-                          ))
+        fig.update_layout(
+            xaxis_title='Data',
+            yaxis_title='Traffico previsto',
+            template='plotly_white',
+            autosize=True,
+            width=1000,
+            height=600,
+            xaxis=dict(
+                tickformat='%Y-%m-%d',
+                dtick="M1",
+                tickangle=45
+            ),
+            legend=dict(
+                orientation="h",
+                yanchor="bottom",
+                y=-0.3,
+                xanchor="center",
+                x=0.5
+            )
+        )
         
         st.plotly_chart(fig, use_container_width=True)
 
