@@ -4,8 +4,6 @@ from prophet import Prophet
 from prophet.plot import plot_plotly
 from datetime import datetime
 from pandas.tseries.offsets import DateOffset
-import numpy as np
-import plotly.graph_objects as go
 import os
 
 # Funzione per formattare i numeri
@@ -148,30 +146,20 @@ if competitors:
                 
                 nome_competitor = estrai_nome_competitor(uploaded_file.name)
                 all_forecasts[nome_competitor] = forecast_competitor
-        
+
         # Grafico con le linee sovrapposte
         st.subheader("Previsioni del traffico futuro (Cliente vs Competitor)")
-        fig = go.Figure()
+        fig = plot_plotly(modello_cliente, forecast_cliente)
         
-        # Aggiungi i dati del cliente
-        fig.add_trace(go.Scatter(x=forecast_cliente['ds'], y=forecast_cliente['yhat'], mode='lines', name='Cliente'))
-        
-        # Aggiungi i dati dei competitor
         for competitor_name, forecast_competitor in all_forecasts.items():
-            fig.add_trace(go.Scatter(x=forecast_competitor['ds'], y=forecast_competitor['yhat'], mode='lines', name=f'Competitor: {competitor_name}'))
-        
+            fig_competitor = plot_plotly(modello_competitor, forecast_competitor)
+            fig.add_trace(fig_competitor.data[0])
+
         fig.update_layout(
             xaxis_title='Data',
             yaxis_title='Traffico previsto',
             template='plotly_white',
             autosize=True,
-            width=1000,
-            height=600,
-            xaxis=dict(
-                tickformat='%Y-%m-%d',
-                dtick="M1",
-                tickangle=45
-            ),
             legend=dict(
                 orientation="h",
                 yanchor="bottom",
@@ -180,7 +168,7 @@ if competitors:
                 x=0.5
             )
         )
-        
+
         st.plotly_chart(fig, use_container_width=True)
 
 # Sponsored content
