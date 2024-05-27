@@ -5,6 +5,7 @@ from prophet.plot import plot_plotly
 from datetime import datetime
 from pandas.tseries.offsets import DateOffset
 import numpy as np
+import plotly.express as px
 import plotly.graph_objects as go
 import os
 
@@ -130,7 +131,7 @@ if uploaded_file_cliente is not None:
         
         st.subheader("Previsioni del traffico futuro del sito cliente")
         fig1 = plot_plotly(modello_cliente, forecast_cliente)
-        st.plotly_chart(fig1)
+        st.plotly_chart(fig1, use_container_width=True)
 
 # Chiedi se ci sono competitor
 competitors = st.checkbox("Vuoi aggiungere competitor?")
@@ -198,9 +199,16 @@ if competitors:
                               tickformat='%Y-%m-%d',
                               dtick="M1",
                               tickangle=45
+                          ),
+                          legend=dict(
+                              orientation="h",
+                              yanchor="bottom",
+                              y=-0.3,
+                              xanchor="center",
+                              x=0.5
                           ))
         
-        st.plotly_chart(fig)
+        st.plotly_chart(fig, use_container_width=True)
 
 # Sponsored content
 st.markdown('**Sponsored**')
