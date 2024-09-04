@@ -6,9 +6,10 @@ from datetime import datetime
 from pandas.tseries.offsets import DateOffset
 import numpy as np
 import numpy as np
-np.float_ = np.float64 
 import plotly.graph_objects as go
 import os
+
+np.float_ = np.float64
 
 # Funzione per formattare i numeri
 def formatta_numero(numero):
