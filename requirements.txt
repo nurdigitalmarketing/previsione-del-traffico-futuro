@@ -2,3 +2,4 @@ streamlit
 pandas
 prophet
 plotly
+numpy==1.26.4
